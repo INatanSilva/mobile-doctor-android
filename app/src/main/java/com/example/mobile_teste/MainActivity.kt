@@ -1,16 +1,18 @@
 package com.example.mobile_teste
 
 import LoginScreen
-import android.annotation.SuppressLint
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
+import androidx.compose.foundation.layout.*
+import androidx.compose.material3.*
+import androidx.compose.runtime.*
+import androidx.compose.ui.Alignment
+import androidx.compose.ui.Modifier
 import androidx.navigation.compose.*
-
 import com.example.mobile_teste.ui.theme.MobiletesteTheme
 
 class MainActivity : ComponentActivity() {
-    @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContent {
@@ -18,24 +20,51 @@ class MainActivity : ComponentActivity() {
                 // Configurando o NavController
                 val navController = rememberNavController()
 
-                // Criando o NavHost para navegação entre as telas
-                NavHost(navController = navController, startDestination = "telaEscolhaPacienteOuDoutor") {
-                    // Tela de escolha de Paciente ou Doutor
-                    composable("telaEscolhaPacienteOuDoutor") {
-                        TelaEscolhaPacienteOuDoutor(navController = navController)
-                    }
+                // Estado para controlar o carregamento
+                var isLoading by remember { mutableStateOf(true) }
 
-                    // Tela de login
-                    composable("login") {
-                        LoginScreen(navController) // A tela de login que você já criou
-                    }
+                // Simula um carregamento de 3 segundos
+                LaunchedEffect(Unit) {
+                    // Simula um processo de carregamento
+                    kotlinx.coroutines.delay(3000)
+                    isLoading = false
+                }
 
-                    // Tela de registro de paciente
-                    composable("registroPaciente") {
-                        TelaRegistroPaciente(navController = navController)
+                // Exibir ícone de carregamento ou conteúdo baseado no estado
+                if (isLoading) {
+                    // Tela de carregamento
+                    LoadingScreen()
+                } else {
+                    // Tela de navegação normal após o carregamento
+                    NavHost(navController = navController, startDestination = "telaEscolhaPacienteOuDoutor") {
+                        // Tela de escolha de Paciente ou Doutor
+                        composable("telaEscolhaPacienteOuDoutor") {
+                            TelaEscolhaPacienteOuDoutor(navController = navController)
+                        }
+
+                        // Tela de login
+                        composable("login") {
+                            LoginScreen(navController) // A tela de login que você já criou
+                        }
+
+                        // Tela de registro de paciente
+                        composable("registroPaciente") {
+                            TelaRegistroPaciente(navController = navController)
+                        }
                     }
                 }
             }
+        }
+    }
+
+    // Função para exibir a tela de carregamento
+    @Composable
+    fun LoadingScreen() {
+        Box(
+            modifier = Modifier.fillMaxSize(),  // Usa o Modifier.fillMaxSize
+            contentAlignment = Alignment.Center
+        ) {
+            CircularProgressIndicator()  // Ícone de carregamento
         }
     }
 }
