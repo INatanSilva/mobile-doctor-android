@@ -71,14 +71,6 @@ fun TelaRegistroPaciente(navController: NavController) {
                 modifier = Modifier.fillMaxWidth()
             )
 
-            // Campo: Data de Nascimento
-            OutlinedTextField(
-                value = dataNascimento,
-                onValueChange = { dataNascimento = it },
-                label = { Text("Data de Nascimento", color = Color(0xFF3D7B31)) },
-                modifier = Modifier.fillMaxWidth()
-            )
-
             // Campo: Região
             OutlinedTextField(
                 value = regiao,
