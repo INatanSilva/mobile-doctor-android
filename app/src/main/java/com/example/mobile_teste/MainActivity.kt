@@ -2,6 +2,7 @@ package com.example.mobile_teste
 
 import LoginScreen
 import LoginTela
+import android.annotation.SuppressLint
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
@@ -12,13 +13,14 @@ import androidx.compose.ui.Modifier
 import com.example.mobile_teste.ui.theme.MobiletesteTheme
 
 class MainActivity : ComponentActivity() {
+    @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
         setContent {
             MobiletesteTheme {
                 Scaffold(modifier = Modifier.fillMaxSize()) {
-                    LoginScreen()
+                    TelaEscolhaPacienteOuDoutorScreen()
                 }
             }
         }
