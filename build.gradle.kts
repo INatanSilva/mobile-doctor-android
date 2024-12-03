@@ -4,3 +4,15 @@ plugins {
     alias(libs.plugins.kotlin.android) apply false
     alias(libs.plugins.kotlin.compose) apply false
 }
+
+buildscript {
+    repositories {
+        google() // Certifique-se de que o repositório do Google está aqui
+        mavenCentral()
+    }
+
+    dependencies {
+        // Outras dependências
+        classpath ("com.google.gms:google-services:4.3.15") // A versão mais recente do plugin
+    }
+}

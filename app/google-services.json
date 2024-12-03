@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "126506152270",
+    "project_id": "psyconnect-c68f9",
+    "storage_bucket": "psyconnect-c68f9.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:126506152270:android:66e2c3a81868b668e5ee1f",
+        "android_client_info": {
+          "package_name": "com.example.mobile_teste"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyALwPleMp22b0cy7tyqNU_SVo_eF2ORMi4"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

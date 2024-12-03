@@ -1,5 +1,6 @@
 package com.example.mobile_teste
 
+import android.util.Log
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.*
@@ -7,12 +8,13 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
-import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
+import com.google.firebase.database.FirebaseDatabase
+import androidx.compose.ui.Modifier
 
 @Composable
 fun TelaRegistroPaciente(navController: NavController) {
@@ -22,6 +24,30 @@ fun TelaRegistroPaciente(navController: NavController) {
     var idade by remember { mutableStateOf(TextFieldValue("")) }
     var dataNascimento by remember { mutableStateOf(TextFieldValue("")) }
     var regiao by remember { mutableStateOf(TextFieldValue("")) }
+
+    // Referência ao Firebase Database
+    val database = FirebaseDatabase.getInstance()
+    val databaseRef = database.getReference("pacientes")
+
+    // Função para salvar dados no Firebase
+    fun savePatientData() {
+        val patientId = databaseRef.push().key ?: return // Gera um ID único para o paciente
+        val patient = mapOf(
+            "nome" to nome.text,
+            "apelido" to apelido.text,
+            "idade" to idade.text,
+            "regiao" to regiao.text
+        )
+        databaseRef.child(patientId).setValue(patient)
+            .addOnSuccessListener {
+                Log.d("Firebase", "Dados salvos com sucesso!")
+                // Navegar para a próxima tela após salvar
+                navController.navigate("proximaTela")
+            }
+            .addOnFailureListener { exception ->
+                Log.e("Firebase", "Erro ao salvar dados: ${exception.message}")
+            }
+    }
 
     // Tela principal com fundo amarelo claro
     Box(
@@ -82,8 +108,8 @@ fun TelaRegistroPaciente(navController: NavController) {
             // Botão: Registrar
             Button(
                 onClick = {
-                    // Ação ao clicar no botão
-                    navController.navigate("proximaTela")
+                    // Chama a função para salvar os dados
+                    savePatientData()
                 },
                 modifier = Modifier
                     .fillMaxWidth()

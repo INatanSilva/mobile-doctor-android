@@ -1,7 +1,8 @@
 plugins {
-    alias(libs.plugins.android.application)
+    alias(libs.plugins.android.application) // Mantenha isso se estiver usando version catalogs
     alias(libs.plugins.kotlin.android)
     alias(libs.plugins.kotlin.compose)
+    id("com.google.gms.google-services") // Necessário para integrar o Firebase
 }
 
 android {
@@ -41,6 +42,14 @@ android {
 
 dependencies {
 
+    implementation ("androidx.compose.ui:ui:1.5.0") // ou a versão mais recente
+    implementation ("androidx.compose.material3:material3:1.1.0") // para Material3
+    implementation ("androidx.compose.foundation:foundation:1.5.0") // ou a versão mais recente
+    implementation ("androidx.compose.runtime:runtime:1.5.0") // ou a versão mais recente
+    implementation ("com.google.firebase:firebase-database-ktx:20.1.0")  // Firebase Realtime Database
+    implementation ("com.google.firebase:firebase-auth-ktx:21.0.0") // Para autenticação
+    implementation("com.google.firebase:firebase-firestore")
+    implementation(platform("com.google.firebase:firebase-bom:32.8.0"))
     implementation("androidx.navigation:navigation-compose:2.5.3")
     implementation("androidx.compose.material:material-icons-extended:1.5.0")
     implementation(libs.androidx.core.ktx)
@@ -60,4 +69,6 @@ dependencies {
     androidTestImplementation(libs.androidx.ui.test.junit4)
     debugImplementation(libs.androidx.ui.tooling)
     debugImplementation(libs.androidx.ui.test.manifest)
+
 }
+
