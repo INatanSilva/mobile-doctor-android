@@ -49,7 +49,7 @@ fun LoginScreen() {
                     .padding(24.dp)
             ) {
                 Text(
-                    text = "Bem-vinda de volta!",
+                    text = "Bem-vindo(a)",
                     fontSize = 24.sp,
                     fontWeight = FontWeight.Bold,
                     color = Color(0xFF3D7B31) // #3d7b31 (Verde escuro)
