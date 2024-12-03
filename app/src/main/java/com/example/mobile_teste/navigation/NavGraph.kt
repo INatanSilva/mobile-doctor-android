@@ -6,6 +6,7 @@ import androidx.navigation.NavController
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.compose.composable
 import com.example.mobile_teste.TelaEscolhaPacienteOuDoutor
+import com.example.mobile_teste.TelaRegistroDoutor
 import com.example.mobile_teste.TelaRegistroPaciente
 
 @Composable
@@ -15,6 +16,9 @@ fun AppNavigation(navController: NavController) {
         composable("telaRegistroPaciente") { TelaRegistroPaciente(navController) }
         composable("login") { LoginScreen(navController) }
         // Outras rotas...
+        composable("telaRegistroDoutor") {
+            TelaRegistroDoutor(navController = navController)  // Adicione esta linha
+        }
     }
 }
 
@@ -25,3 +29,4 @@ fun NavHost(
 ) {
     TODO("Not yet implemented")
 }
+

@@ -46,7 +46,7 @@ fun TelaEscolhaPacienteOuDoutor(navController: NavController) {
             onClick = {
                 escolha = "Doutor" // Atualiza a variável com a escolha
                 Log.d("EscolhaUsuario", "Escolha: $escolha") // Registra no console
-                navController.navigate("login") // Navega para a tela de login
+                navController.navigate("telaRegistroDoutor") // Navega para a TelaRegistroDoutor
             },
             modifier = Modifier
                 .width(200.dp)

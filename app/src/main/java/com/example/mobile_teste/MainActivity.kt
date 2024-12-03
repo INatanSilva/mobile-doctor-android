@@ -25,8 +25,7 @@ class MainActivity : ComponentActivity() {
 
                 // Simula um carregamento de 3 segundos
                 LaunchedEffect(Unit) {
-                    // Simula um processo de carregamento
-                    kotlinx.coroutines.delay(3000)
+                    kotlinx.coroutines.delay(3000)  // Simula o delay de carregamento
                     isLoading = false
                 }
 
@@ -44,12 +43,17 @@ class MainActivity : ComponentActivity() {
 
                         // Tela de login
                         composable("login") {
-                            LoginScreen(navController) // A tela de login que você já criou
+                            LoginScreen(navController) // Corrigido o nome da tela LoginScreen
                         }
 
                         // Tela de registro de paciente
                         composable("registroPaciente") {
                             TelaRegistroPaciente(navController = navController)
+                        }
+
+                        // Tela de registro do doutor
+                        composable("telaRegistroDoutor") {
+                            TelaRegistroDoutor(navController = navController)
                         }
                     }
                 }
