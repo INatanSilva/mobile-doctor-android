@@ -18,7 +18,6 @@ import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.lint.kotlin.metadata.Visibility
 
 class LoginTela : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -35,15 +34,8 @@ fun LoginScreen() {
         Box(
             modifier = Modifier
                 .fillMaxSize()
-                .background(
-                    Brush.linearGradient(
-                        colors = listOf(
-                            Color(0xFFFFC1CC), // Rosa claro
-                            Color(0xFFFF69B4), // Rosa médio
-                            Color(0xFFC71585)  // Rosa escuro
-                        )
-                    )
-                ),
+                .background(Color(0xFFFFFEC)) // #ffffec (Fundo claro)
+            ,
             contentAlignment = Alignment.Center
         ) {
             Column(
@@ -52,14 +44,14 @@ fun LoginScreen() {
                 modifier = Modifier
                     .padding(16.dp)
                     .fillMaxWidth()
-                    .background(Color.White, shape = RoundedCornerShape(16.dp))
+                    .background(Color(0xFFFFFFFF), shape = RoundedCornerShape(16.dp)) // Fundo dos campos
                     .padding(24.dp)
             ) {
                 Text(
                     text = "Bem-vinda de volta!",
                     fontSize = 24.sp,
                     fontWeight = FontWeight.Bold,
-                    color = Color(0xFFC71585) // Rosa escuro
+                    color = Color(0xFF3D7B31) // #3d7b31 (Verde escuro)
                 )
                 Spacer(modifier = Modifier.height(16.dp))
                 LoginForm()
@@ -68,6 +60,7 @@ fun LoginScreen() {
     }
 }
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun LoginForm() {
     var email by remember { mutableStateOf("") }
@@ -81,6 +74,12 @@ fun LoginForm() {
             onValueChange = { email = it },
             label = { Text("E-mail") },
             singleLine = true,
+            colors = TextFieldDefaults.outlinedTextFieldColors(
+                focusedBorderColor = Color(0xFF3D7B31), // #3d7b31 (Verde escuro) para borda
+                unfocusedBorderColor = Color(0xFF9EBD8E), // #9ebd8e (Verde suave) para borda
+                focusedLabelColor = Color(0xFF3D7B31), // #3d7b31 (Verde escuro) para label
+                unfocusedLabelColor = Color(0xFF9EBD8E) // #9ebd8e (Verde suave) para label
+            ),
             modifier = Modifier
                 .fillMaxWidth()
                 .padding(vertical = 8.dp)
@@ -100,6 +99,12 @@ fun LoginForm() {
                     Icon(imageVector = icon, contentDescription = description)
                 }
             },
+            colors = TextFieldDefaults.outlinedTextFieldColors(
+                focusedBorderColor = Color(0xFF3D7B31), // #3d7b31 (Verde escuro) para borda
+                unfocusedBorderColor = Color(0xFF9EBD8E), // #9ebd8e (Verde suave) para borda
+                focusedLabelColor = Color(0xFF3D7B31), // #3d7b31 (Verde escuro) para label
+                unfocusedLabelColor = Color(0xFF9EBD8E) // #9ebd8e (Verde suave) para label
+            ),
             modifier = Modifier
                 .fillMaxWidth()
                 .padding(vertical = 8.dp)
@@ -108,7 +113,7 @@ fun LoginForm() {
         // Botão de Entrar
         Button(
             onClick = { /* Ação ao clicar no botão */ },
-            colors = ButtonDefaults.buttonColors(containerColor = Color(0xFFFF69B4)), // Rosa médio
+            colors = ButtonDefaults.buttonColors(containerColor = Color(0xFF9EBD8E)), // #9ebd8e (Verde suave)
             modifier = Modifier
                 .fillMaxWidth()
                 .padding(vertical = 16.dp)
@@ -122,17 +127,16 @@ fun LoginForm() {
         TextButton(onClick = { /* Ação para criar conta */ }) {
             Text(
                 text = "Criar uma conta",
-                color = Color(0xFFC71585), // Rosa escuro
+                color = Color(0xFF3D7B31), // #3d7b31 (Verde escuro)
                 fontWeight = FontWeight.Medium
             )
         }
         TextButton(onClick = { /* Ação para recuperar senha */ }) {
             Text(
                 text = "Esqueci minha senha",
-                color = Color(0xFFC71585),
+                color = Color(0xFF3D7B31), // #3d7b31 (Verde escuro)
                 fontWeight = FontWeight.Medium
             )
         }
     }
 }
-
