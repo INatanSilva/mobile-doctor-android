@@ -18,18 +18,21 @@ import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.navigation.NavController
+import androidx.navigation.compose.rememberNavController
 
 class LoginTela : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContent {
-            LoginScreen()
+            val navController = rememberNavController() // Cria uma instância válida do NavController
+            LoginScreen(navController) // Passa o NavController criado
         }
     }
 }
 
 @Composable
-fun LoginScreen() {
+fun LoginScreen(navController: NavController) {
     MaterialTheme {
         Box(
             modifier = Modifier
