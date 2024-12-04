@@ -19,7 +19,19 @@ fun AppNavigation(navController: NavController) {
         composable("telaRegistroDoutor") {
             TelaRegistroDoutor(navController = navController)  // Adicione esta linha
         }
+        NavHost(navController, startDestination = "RegistroTela") {
+            composable("RegistroTela") { TelaRegistroPaciente(navController) }
+            composable("login") { LoginScreen(navController) }
+
+
+        }
+
     }
+}
+
+@Composable
+fun TelaLogin(navController: NavController) {
+    TODO("Not yet implemented")
 }
 
 fun NavHost(

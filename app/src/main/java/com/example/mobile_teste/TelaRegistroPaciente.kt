@@ -3,13 +3,19 @@ package com.example.mobile_teste
 import android.util.Log
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Visibility
+import androidx.compose.material.icons.filled.VisibilityOff
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.input.TextFieldValue
+import androidx.compose.ui.text.input.PasswordVisualTransformation
+import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
@@ -18,62 +24,75 @@ import androidx.compose.ui.Modifier
 
 @Composable
 fun TelaRegistroPaciente(navController: NavController) {
-    // Estados para armazenar os valores dos campos
     var nome by remember { mutableStateOf(TextFieldValue("")) }
     var apelido by remember { mutableStateOf(TextFieldValue("")) }
     var idade by remember { mutableStateOf(TextFieldValue("")) }
-    var dataNascimento by remember { mutableStateOf(TextFieldValue("")) }
     var regiao by remember { mutableStateOf(TextFieldValue("")) }
+    var email by remember { mutableStateOf(TextFieldValue("")) }
+    var senha by remember { mutableStateOf(TextFieldValue("")) }
+    var senhaVisivel by remember { mutableStateOf(false) }
+    var errorMessage by remember { mutableStateOf("") }
 
-    // Referência ao Firebase Database
     val database = FirebaseDatabase.getInstance()
     val databaseRef = database.getReference("pacientes")
 
-    // Função para salvar dados no Firebase
+    fun isValidEmail(email: String): Boolean {
+        val emailPattern = android.util.Patterns.EMAIL_ADDRESS
+        return emailPattern.matcher(email).matches()
+    }
+
     fun savePatientData() {
-        val patientId = databaseRef.push().key ?: return // Gera um ID único para o paciente
+        if (!isValidEmail(email.text)) {
+            errorMessage = "Por favor, insira um email válido."
+            return
+        }
+
+        if (senha.text.length < 6) {
+            errorMessage = "A senha deve ter pelo menos 6 caracteres."
+            return
+        }
+
+        val patientId = databaseRef.push().key ?: return
         val patient = mapOf(
             "nome" to nome.text,
             "apelido" to apelido.text,
             "idade" to idade.text,
-            "regiao" to regiao.text
+            "regiao" to regiao.text,
+            "email" to email.text,
+            "senha" to senha.text // NÃO recomendável salvar senha como texto puro
         )
         databaseRef.child(patientId).setValue(patient)
             .addOnSuccessListener {
                 Log.d("Firebase", "Dados salvos com sucesso!")
-                // Navegar para a próxima tela após salvar
-                navController.navigate("proximaTela")
+                navController.navigate("login")
             }
             .addOnFailureListener { exception ->
-                Log.e("Firebase", "Erro ao salvar dados: ${exception.message}")
+                errorMessage = "Erro ao salvar dados: ${exception.message}"
+                Log.e("Firebase", errorMessage)
             }
     }
 
-    // Tela principal com fundo amarelo claro
     Box(
         modifier = Modifier
             .fillMaxSize()
-            .background(Color(0xFFFFFEC)), // Fundo da tela
+            .background(Color(0xFFFFFEC)),
         contentAlignment = Alignment.Center
     ) {
-        // Coluna central com fundo branco e borda verde suave
         Column(
             modifier = Modifier
-                .fillMaxWidth(0.9f) // 90% da largura da tela
-                .border(2.dp, Color(0xFFB8D8B7), RoundedCornerShape(16.dp)) // Borda verde suave
+                .fillMaxWidth(0.9f)
+                .border(2.dp, Color(0xFFB8D8B7), RoundedCornerShape(16.dp))
                 .padding(16.dp)
-                .background(Color(0xFFFFFFFF)), // Fundo branco
+                .background(Color(0xFFFFFFFF)),
             verticalArrangement = Arrangement.spacedBy(16.dp),
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
-            // Título
             Text(
                 text = "Registro de Paciente",
-                color = Color(0xFF3D7B31), // Verde escuro
+                color = Color(0xFF3D7B31),
                 fontSize = 24.sp
             )
 
-            // Campo: Nome
             OutlinedTextField(
                 value = nome,
                 onValueChange = { nome = it },
@@ -81,7 +100,6 @@ fun TelaRegistroPaciente(navController: NavController) {
                 modifier = Modifier.fillMaxWidth()
             )
 
-            // Campo: Apelido
             OutlinedTextField(
                 value = apelido,
                 onValueChange = { apelido = it },
@@ -89,7 +107,6 @@ fun TelaRegistroPaciente(navController: NavController) {
                 modifier = Modifier.fillMaxWidth()
             )
 
-            // Campo: Idade
             OutlinedTextField(
                 value = idade,
                 onValueChange = { idade = it },
@@ -97,7 +114,6 @@ fun TelaRegistroPaciente(navController: NavController) {
                 modifier = Modifier.fillMaxWidth()
             )
 
-            // Campo: Região
             OutlinedTextField(
                 value = regiao,
                 onValueChange = { regiao = it },
@@ -105,18 +121,47 @@ fun TelaRegistroPaciente(navController: NavController) {
                 modifier = Modifier.fillMaxWidth()
             )
 
-            // Botão: Registrar
+            OutlinedTextField(
+                value = email,
+                onValueChange = { email = it },
+                label = { Text("Email", color = Color(0xFF3D7B31)) },
+                modifier = Modifier.fillMaxWidth()
+            )
+
+            OutlinedTextField(
+                value = senha,
+                onValueChange = { senha = it },
+                label = { Text("Senha", color = Color(0xFF3D7B31)) },
+                visualTransformation = if (senhaVisivel) VisualTransformation.None else PasswordVisualTransformation(),
+                trailingIcon = {
+                    Icon(
+                        imageVector = if (senhaVisivel) Icons.Filled.Visibility else Icons.Filled.VisibilityOff,
+                        contentDescription = if (senhaVisivel) "Ocultar senha" else "Exibir senha",
+                        modifier = Modifier.clickable { senhaVisivel = !senhaVisivel },
+                        tint = Color(0xFF3D7B31)
+                    )
+                },
+                modifier = Modifier.fillMaxWidth()
+            )
+
+            if (errorMessage.isNotEmpty()) {
+                Text(
+                    text = errorMessage,
+                    color = Color.Red,
+                    fontSize = 14.sp
+                )
+            }
+
             Button(
                 onClick = {
-                    // Chama a função para salvar os dados
                     savePatientData()
                 },
                 modifier = Modifier
                     .fillMaxWidth()
                     .height(50.dp),
                 colors = ButtonDefaults.buttonColors(
-                    containerColor = Color(0xFF9EBD8E), // Fundo verde suave
-                    contentColor = Color.White // Texto branco
+                    containerColor = Color(0xFF9EBD8E),
+                    contentColor = Color.White
                 ),
                 shape = RoundedCornerShape(16.dp)
             ) {
