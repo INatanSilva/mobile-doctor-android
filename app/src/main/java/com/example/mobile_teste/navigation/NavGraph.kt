@@ -5,33 +5,33 @@ import androidx.compose.runtime.Composable
 import androidx.navigation.NavController
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.compose.composable
-import com.example.mobile_teste.TelaEscolhaPacienteOuDoutor
-import com.example.mobile_teste.TelaRegistroDoutor
-import com.example.mobile_teste.TelaRegistroPaciente
+import com.example.mobile_teste.*
 
 @Composable
 fun AppNavigation(navController: NavController) {
-    NavHost(navController = navController, startDestination = "telaEscolha") {
-        composable("telaEscolha") { TelaEscolhaPacienteOuDoutor(navController) }
-        composable("telaRegistroPaciente") { TelaRegistroPaciente(navController) }
-        composable("login") { LoginScreen(navController) }
-        // Outras rotas...
+    NavHost(navController = navController, startDestination = "login") {
+        // Tela de login
+        composable("login") {
+            LoginScreen(navController)
+        }
+
+        // Tela inicial para escolha de paciente ou doutor
+        composable("telaEscolha") {
+            TelaEscolhaPacienteOuDoutor(navController)
+        }
+
+        // Tela de registro de paciente
+        composable("telaRegistroPaciente") {
+            TelaRegistroPaciente(navController)
+        }
+
+        // Tela de registro de doutor
         composable("telaRegistroDoutor") {
-            TelaRegistroDoutor(navController = navController)  // Adicione esta linha
-        }
-        NavHost(navController, startDestination = "RegistroTela") {
-            composable("RegistroTela") { TelaRegistroPaciente(navController) }
-            composable("login") { LoginScreen(navController) }
-
-
+            TelaRegistroDoutor(navController)
         }
 
+        // Outras rotas podem ser adicionadas aqui futuramente
     }
-}
-
-@Composable
-fun TelaLogin(navController: NavController) {
-    TODO("Not yet implemented")
 }
 
 fun NavHost(
@@ -39,6 +39,11 @@ fun NavHost(
     startDestination: String,
     builder: NavGraphBuilder.() -> Unit
 ) {
-    TODO("Not yet implemented")
+
+
 }
 
+@Composable
+fun LoginTela(navController: NavController) {
+    TODO("Not yet implemented")
+}

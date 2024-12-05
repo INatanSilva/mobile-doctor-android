@@ -19,6 +19,7 @@ import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
+import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.FirebaseDatabase
 import androidx.compose.ui.Modifier
 
@@ -33,6 +34,7 @@ fun TelaRegistroPaciente(navController: NavController) {
     var senhaVisivel by remember { mutableStateOf(false) }
     var errorMessage by remember { mutableStateOf("") }
 
+    val auth = FirebaseAuth.getInstance()
     val database = FirebaseDatabase.getInstance()
     val databaseRef = database.getReference("pacientes")
 
@@ -52,23 +54,32 @@ fun TelaRegistroPaciente(navController: NavController) {
             return
         }
 
-        val patientId = databaseRef.push().key ?: return
-        val patient = mapOf(
-            "nome" to nome.text,
-            "apelido" to apelido.text,
-            "idade" to idade.text,
-            "regiao" to regiao.text,
-            "email" to email.text,
-            "senha" to senha.text // NÃO recomendável salvar senha como texto puro
-        )
-        databaseRef.child(patientId).setValue(patient)
-            .addOnSuccessListener {
-                Log.d("Firebase", "Dados salvos com sucesso!")
-                navController.navigate("login")
-            }
-            .addOnFailureListener { exception ->
-                errorMessage = "Erro ao salvar dados: ${exception.message}"
-                Log.e("Firebase", errorMessage)
+        // Cadastrar no Firebase Authentication
+        auth.createUserWithEmailAndPassword(email.text, senha.text)
+            .addOnCompleteListener { task ->
+                if (task.isSuccessful) {
+                    // Salvar os dados do paciente no Firebase Database
+                    val patientId = databaseRef.push().key ?: return@addOnCompleteListener
+                    val patient = mapOf(
+                        "nome" to nome.text,
+                        "apelido" to apelido.text,
+                        "idade" to idade.text,
+                        "regiao" to regiao.text,
+                        "email" to email.text
+                    )
+                    databaseRef.child(patientId).setValue(patient)
+                        .addOnSuccessListener {
+                            Log.d("Firebase", "Dados salvos com sucesso!")
+                            navController.navigate("login") // Redirecionar para a tela de login
+                        }
+                        .addOnFailureListener { exception ->
+                            errorMessage = "Erro ao salvar dados: ${exception.message}"
+                            Log.e("Firebase", errorMessage)
+                        }
+                } else {
+                    errorMessage = "Erro ao cadastrar no Firebase: ${task.exception?.message}"
+                    Log.e("Firebase", errorMessage)
+                }
             }
     }
 
