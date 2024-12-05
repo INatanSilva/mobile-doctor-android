@@ -180,7 +180,7 @@ fun TelaRegistroDoutorScreen(navController: NavController) {
                                     especialidade = especialidadeItem
                                     expanded = false
                                 },
-                                text = { Text(text = especialidadeItem) }  // Corrigido para passar o texto corretamente
+                                text = { Text(text = especialidadeItem) }
                             )
                         }
                     }
@@ -194,7 +194,9 @@ fun TelaRegistroDoutorScreen(navController: NavController) {
                         // Verifica se todos os campos foram preenchidos
                         if (nome.text.isNotEmpty() && apelido.text.isNotEmpty() && idade.text.isNotEmpty() &&
                             regiao.text.isNotEmpty() && especialidade.isNotEmpty() && email.text.isNotEmpty() && senha.text.isNotEmpty()) {
-                            registrarDoutor(nome.text, apelido.text, idade.text, regiao.text, especialidade, email.text, senha.text, context)
+                            registrarDoutor(
+                                nome.text, apelido.text, idade.text, regiao.text, especialidade, email.text, senha.text, context, navController
+                            )
                         } else {
                             Toast.makeText(context, "Preencha todos os campos", Toast.LENGTH_SHORT).show()
                         }
@@ -204,14 +206,14 @@ fun TelaRegistroDoutorScreen(navController: NavController) {
                         .padding(16.dp),
                     colors = ButtonDefaults.buttonColors(containerColor = Color(0xFF9EBD8E))  // Cor do botão verde suave
                 ) {
-                    Text("Registrar Doutor", color = Color.White)
+                    Text("Registrar", color = Color.White)
                 }
             }
         }
     }
 }
 
-fun registrarDoutor(nome: String, apelido: String, idade: String, regiao: String, especialidade: String, email: String, senha: String, context: android.content.Context) {
+fun registrarDoutor(nome: String, apelido: String, idade: String, regiao: String, especialidade: String, email: String, senha: String, context: android.content.Context, navController: NavController) {
     // Firebase Authentication
     val auth = FirebaseAuth.getInstance()
     val database = FirebaseDatabase.getInstance().reference
@@ -226,6 +228,8 @@ fun registrarDoutor(nome: String, apelido: String, idade: String, regiao: String
                 database.child("doutores").child(userId).setValue(doutor).addOnCompleteListener { dbTask ->
                     if (dbTask.isSuccessful) {
                         Toast.makeText(context, "Doutor registrado com sucesso!", Toast.LENGTH_SHORT).show()
+                        // Navega para a tela de Login após o registro bem-sucedido
+                        navController.navigate("Login")
                     } else {
                         Toast.makeText(context, "Erro ao registrar doutor no banco de dados!", Toast.LENGTH_SHORT).show()
                     }
