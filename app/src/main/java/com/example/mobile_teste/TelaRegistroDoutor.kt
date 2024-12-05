@@ -1,8 +1,6 @@
 package com.example.mobile_teste
 
-import android.os.Bundle
-import androidx.activity.ComponentActivity
-import androidx.activity.compose.setContent
+import android.widget.Toast
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.*
@@ -17,7 +15,9 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
-import com.example.mobile_teste.ui.theme.MobiletesteTheme
+import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.database.FirebaseDatabase
+import androidx.compose.ui.platform.LocalContext
 
 @Composable
 fun TelaRegistroDoutor(navController: NavController) {
@@ -33,6 +33,8 @@ fun TelaRegistroDoutorScreen(navController: NavController) {
     var idade by remember { mutableStateOf(TextFieldValue()) }
     var regiao by remember { mutableStateOf(TextFieldValue()) }
     var especialidade by remember { mutableStateOf("") }
+    var email by remember { mutableStateOf(TextFieldValue()) }
+    var senha by remember { mutableStateOf(TextFieldValue()) }
 
     // Lista de especialidades na área de psicologia
     val especialidades = listOf(
@@ -44,6 +46,7 @@ fun TelaRegistroDoutorScreen(navController: NavController) {
     )
 
     var expanded by remember { mutableStateOf(false) }
+    val context = LocalContext.current  // Acessando o contexto
 
     Column(
         modifier = Modifier
@@ -118,6 +121,34 @@ fun TelaRegistroDoutorScreen(navController: NavController) {
 
                 Spacer(modifier = Modifier.height(16.dp))
 
+                // E-mail
+                Text("E-mail", color = Color(0xFF3D7B31))  // Cor do texto principal (verde escuro)
+                BasicTextField(
+                    value = email,
+                    onValueChange = { email = it },
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(8.dp)
+                        .border(1.dp, Color(0xFFB8D8B7))  // Cor da borda verde suave
+                        .padding(8.dp)
+                )
+
+                Spacer(modifier = Modifier.height(16.dp))
+
+                // Senha
+                Text("Senha", color = Color(0xFF3D7B31))  // Cor do texto principal (verde escuro)
+                BasicTextField(
+                    value = senha,
+                    onValueChange = { senha = it },
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(8.dp)
+                        .border(1.dp, Color(0xFFB8D8B7))  // Cor da borda verde suave
+                        .padding(8.dp)
+                )
+
+                Spacer(modifier = Modifier.height(16.dp))
+
                 // Especialidade
                 Text("Especialidade", color = Color(0xFF3D7B31))  // Cor do texto principal (verde escuro)
 
@@ -160,12 +191,18 @@ fun TelaRegistroDoutorScreen(navController: NavController) {
                 // Botão de registro
                 Button(
                     onClick = {
-                        // Lógica de registro do doutor
+                        // Verifica se todos os campos foram preenchidos
+                        if (nome.text.isNotEmpty() && apelido.text.isNotEmpty() && idade.text.isNotEmpty() &&
+                            regiao.text.isNotEmpty() && especialidade.isNotEmpty() && email.text.isNotEmpty() && senha.text.isNotEmpty()) {
+                            registrarDoutor(nome.text, apelido.text, idade.text, regiao.text, especialidade, email.text, senha.text, context)
+                        } else {
+                            Toast.makeText(context, "Preencha todos os campos", Toast.LENGTH_SHORT).show()
+                        }
                     },
                     modifier = Modifier
                         .fillMaxWidth()
                         .padding(16.dp),
-                    colors = ButtonDefaults.buttonColors(containerColor  = Color(0xFF9EBD8E))  // Cor do botão verde suave
+                    colors = ButtonDefaults.buttonColors(containerColor = Color(0xFF9EBD8E))  // Cor do botão verde suave
                 ) {
                     Text("Registrar Doutor", color = Color.White)
                 }
@@ -173,3 +210,38 @@ fun TelaRegistroDoutorScreen(navController: NavController) {
         }
     }
 }
+
+fun registrarDoutor(nome: String, apelido: String, idade: String, regiao: String, especialidade: String, email: String, senha: String, context: android.content.Context) {
+    // Firebase Authentication
+    val auth = FirebaseAuth.getInstance()
+    val database = FirebaseDatabase.getInstance().reference
+
+    auth.createUserWithEmailAndPassword(email, senha).addOnCompleteListener { task ->
+        if (task.isSuccessful) {
+            // Criação do usuário bem-sucedida, agora vamos salvar os dados do doutor no Firebase Database
+            val userId = auth.currentUser?.uid
+            val doutor = Doutor(nome, apelido, idade, regiao, especialidade, email)
+
+            if (userId != null) {
+                database.child("doutores").child(userId).setValue(doutor).addOnCompleteListener { dbTask ->
+                    if (dbTask.isSuccessful) {
+                        Toast.makeText(context, "Doutor registrado com sucesso!", Toast.LENGTH_SHORT).show()
+                    } else {
+                        Toast.makeText(context, "Erro ao registrar doutor no banco de dados!", Toast.LENGTH_SHORT).show()
+                    }
+                }
+            }
+        } else {
+            Toast.makeText(context, "Erro ao criar usuário: ${task.exception?.message}", Toast.LENGTH_SHORT).show()
+        }
+    }
+}
+
+data class Doutor(
+    val nome: String,
+    val apelido: String,
+    val idade: String,
+    val regiao: String,
+    val especialidade: String,
+    val email: String
+)
