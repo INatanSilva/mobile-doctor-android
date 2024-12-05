@@ -38,7 +38,7 @@ class MainActivity : ComponentActivity() {
                     // Tela de navegação normal após o carregamento
                     NavHost(
                         navController = navController,
-                        startDestination = "telaEscolhaPacienteOuDoutor"
+                        startDestination = "login"
                     ) {
                         // Tela de escolha de Paciente ou Doutor
                         composable("telaEscolhaPacienteOuDoutor") {
