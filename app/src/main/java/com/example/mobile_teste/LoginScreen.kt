@@ -146,7 +146,8 @@ fun LoginForm(auth: FirebaseAuth, navController: NavController) {
         }
 
         // Links
-        TextButton(onClick = { /* Navegar para criar conta */ }) {
+        TextButton(onClick = {
+            navController.navigate("telaEscolhaPacienteOuDoutor") }) {
             Text(text = "Criar uma conta", color = Color(0xFF3D7B31))
         }
         TextButton(onClick = { /* Navegar para recuperar senha */ }) {
