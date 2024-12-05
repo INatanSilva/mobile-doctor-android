@@ -1,12 +1,13 @@
 package com.example.mobile_teste.navigation
 
+
 import LoginScreen
 import androidx.compose.runtime.Composable
 import androidx.navigation.NavController
 import androidx.navigation.NavGraphBuilder
-import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import com.example.mobile_teste.*  // Importe as telas relevantes
+import com.example.mobile_teste.ui.theme.TelaInicial
 
 @Composable
 fun AppNavigation(navController: NavController) {
@@ -14,6 +15,10 @@ fun AppNavigation(navController: NavController) {
         // Tela de login
         composable("login") {
             LoginScreen(navController)
+        }
+        // Tela de boas-vindas
+        composable("telaInicial") {
+            TelaInicial(navController) // Exibe a tela com "Seja bem-vindo(a)"
         }
 
         // Tela inicial para escolha de paciente ou doutor

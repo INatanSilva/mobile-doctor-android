@@ -11,6 +11,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.navigation.compose.*
 import com.example.mobile_teste.ui.theme.MobiletesteTheme
+import com.example.mobile_teste.ui.theme.TelaInicial
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -58,6 +59,10 @@ class MainActivity : ComponentActivity() {
                         // Tela de registro do doutor
                         composable("telaRegistroDoutor") {
                             TelaRegistroDoutor(navController = navController)
+                        }
+
+                        composable("telaInicial") {
+                            TelaInicial(navController = navController)
                         }
                     }
                 }

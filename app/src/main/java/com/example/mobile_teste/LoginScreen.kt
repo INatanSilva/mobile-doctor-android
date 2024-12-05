@@ -107,19 +107,24 @@ fun LoginForm(auth: FirebaseAuth, navController: NavController) {
                 .padding(vertical = 8.dp)
         )
 
-        // Botão de Entrar
         Button(
             onClick = {
                 loginUser(email, password, auth) { success, message ->
                     if (success) {
+                        // Login bem-sucedido
                         Toast.makeText(
                             navController.context,
                             "Login realizado com sucesso!",
                             Toast.LENGTH_SHORT
                         ).show()
                         Log.d("LoginStatus", "Login bem-sucedido para o usuário: $email")
-                        // Redirecione para a próxima tela
+
+                        // Navegar para a Tela Inicial após login
+                        navController.navigate("telaInicial") {
+                            popUpTo("login") { inclusive = true }
+                        }
                     } else {
+                        // Se houve erro no login, exibe a mensagem de erro
                         errorMessage = message
                         Log.d("LoginStatus", "Falha no login para o usuário: $email - Erro: $message")
                     }
