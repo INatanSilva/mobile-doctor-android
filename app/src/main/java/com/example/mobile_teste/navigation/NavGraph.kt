@@ -7,7 +7,7 @@ import androidx.navigation.NavController
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.compose.composable
 import com.example.mobile_teste.*  // Importe as telas relevantes
-import com.example.mobile_teste.ui.theme.TelaInicial
+import TelaInicial
 
 @Composable
 fun AppNavigation(navController: NavController) {

@@ -1,6 +1,7 @@
 package com.example.mobile_teste
 
 import LoginScreen
+import TelaInicial
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
@@ -11,7 +12,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.navigation.compose.*
 import com.example.mobile_teste.ui.theme.MobiletesteTheme
-import com.example.mobile_teste.ui.theme.TelaInicial
+import TelaInicial
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
