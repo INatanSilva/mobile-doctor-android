@@ -4,6 +4,7 @@ import androidx.compose.animation.core.spring
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Menu
 import androidx.compose.material.icons.filled.Person
@@ -56,18 +57,29 @@ fun TelaInicial(navController: NavController) {
                 )
             },
             content = { paddingValues: PaddingValues ->
-                Box(
+                Column(
                     modifier = Modifier
                         .fillMaxSize()
                         .background(AppColors.background)
                         .padding(paddingValues)
                 ) {
-                    Text(
-                        text = "Bem-vindo ao PsyConnect!",
-                        color = AppColors.darkGreen,
-                        fontSize = 20.sp,
-                        modifier = Modifier.align(Alignment.Center)
-                    )
+                    Spacer(modifier = Modifier.height(16.dp))
+
+                    // LazyRow com os Cards
+                    LazyRow(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(horizontal = 8.dp),
+                        horizontalArrangement = Arrangement.spacedBy(8.dp)
+                    ) {
+                        items(3) { index -> // Substitua 5 pelo número de itens que você deseja
+                            CardItem(
+                                imageUrl = "https://via.placeholder.com/150", // Substitua pela URL real da imagem
+                                title = "Card $index",
+                                navController = navController
+                            )
+                        }
+                    }
                 }
             }
         )
@@ -124,6 +136,42 @@ fun TelaInicial(navController: NavController) {
                     )
                 }
             }
+        }
+    }
+}
+
+@Composable
+fun CardItem(imageUrl: String, title: String, navController: NavController) {
+    Card(
+        modifier = Modifier
+            .size(200.dp, 150.dp) // Tamanho do card
+            .clickable {
+                // Navega para outra tela ao clicar no card
+                navController.navigate("telaDetalhes/$title")
+            },
+        shape = MaterialTheme.shapes.medium,
+        colors = CardDefaults.cardColors(containerColor = AppColors.lightGreen)
+    ) {
+        Column(
+            modifier = Modifier.fillMaxSize(),
+            horizontalAlignment = Alignment.CenterHorizontally,
+            verticalArrangement = Arrangement.SpaceBetween
+        ) {
+            // Imagem no Card (Substituir com Coil ou outro carregador de imagens)
+            Box(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .height(100.dp)
+                    .background(Color.Gray) // Placeholder para a imagem
+            )
+
+            Text(
+                text = title,
+                color = AppColors.darkGreen,
+                fontSize = 16.sp,
+                textAlign = TextAlign.Center,
+                modifier = Modifier.padding(8.dp)
+            )
         }
     }
 }
