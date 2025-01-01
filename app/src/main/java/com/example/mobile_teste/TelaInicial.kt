@@ -45,13 +45,13 @@ fun TelaInicial(navController: NavController) {
                             Icon(
                                 imageVector = Icons.Default.Menu,
                                 contentDescription = "Menu",
-                                tint = AppColors.darkGreen
+                                tint = AppColors.pastelGreen
                             )
                         }
                     },
-                    title = { Text("PsyConnect", color = AppColors.darkGreen) },
+                    title = { Text("PsyConnect", color = AppColors.pastelGreen) },
                     colors = TopAppBarDefaults.topAppBarColors(
-                        containerColor = AppColors.pastelGreen
+                        containerColor = AppColors.darkGreen
                     )
                 )
             },
