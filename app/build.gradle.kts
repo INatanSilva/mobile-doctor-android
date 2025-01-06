@@ -42,6 +42,7 @@ android {
 
 dependencies {
 
+    implementation ("androidx.compose.runtime:runtime-saveable:1.7.6")
     implementation ("androidx.compose.animation:animation:1.6.0")
     implementation ("androidx.compose.ui:ui:1.5.0") // ou a versão mais recente
     implementation ("androidx.compose.material3:material3:1.1.0") // para Material3

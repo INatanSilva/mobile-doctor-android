@@ -12,7 +12,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.navigation.compose.*
 import com.example.mobile_teste.ui.theme.MobiletesteTheme
-import TelaInicial
+import kotlinx.coroutines.delay
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -28,7 +28,7 @@ class MainActivity : ComponentActivity() {
 
                 // Simula um carregamento de 3 segundos
                 LaunchedEffect(Unit) {
-                    kotlinx.coroutines.delay(3000)  // Simula o delay de carregamento
+                    delay(3000)  // Simula o delay de carregamento
                     isLoading = false
                 }
 
@@ -49,7 +49,10 @@ class MainActivity : ComponentActivity() {
 
                         // Tela de login
                         composable("login") {
-                            LoginScreen(navController) // Corrigido o nome da tela LoginScreen
+                            LoginScreen(
+                                navController,
+                                onLogin = TODO()
+                            ) // Corrigido o nome da tela LoginScreen
                         }
 
                         // Tela de registro de paciente
@@ -63,7 +66,7 @@ class MainActivity : ComponentActivity() {
                         }
 
                         composable("telaInicial") {
-                            TelaInicial(navController = navController)
+                            TelaInicial(navController = navController, userEmail.value)
                         }
                     }
                 }

@@ -18,20 +18,17 @@ import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
-import androidx.navigation.compose.rememberNavController
 import com.google.firebase.auth.FirebaseAuth
-import io.grpc.ManagedChannelBuilder
-import java.util.concurrent.TimeUnit
 
 @Composable
-fun LoginScreen(navController: NavController) {
+fun LoginScreen(navController: NavController, onLogin: (String, String) -> Unit) {
     val auth = FirebaseAuth.getInstance() // Inicializa o FirebaseAuth
 
     MaterialTheme {
         Box(
             modifier = Modifier
                 .fillMaxSize()
-                .background(Color(0xFFFFFEC)), // Fundo claro
+                .background(Color(0xFFFFFDEC)), // Fundo claro
             contentAlignment = Alignment.Center
         ) {
             Column(
@@ -40,8 +37,8 @@ fun LoginScreen(navController: NavController) {
                 modifier = Modifier
                     .padding(16.dp)
                     .fillMaxWidth()
-                    .background(Color(0xFFFFFFFF), shape = RoundedCornerShape(16.dp))
-                    .border(2.dp, Color(0xFFB8D8B7), RoundedCornerShape(20.dp))
+                    .background(Color.White, shape = RoundedCornerShape(16.dp))
+                    .border(2.dp, Color(0xFFB8D8B7), RoundedCornerShape(16.dp))
                     .padding(24.dp)
             ) {
                 Text(
@@ -107,30 +104,27 @@ fun LoginForm(auth: FirebaseAuth, navController: NavController) {
                 .padding(vertical = 8.dp)
         )
 
+        // Botão de Login
         Button(
             onClick = {
                 loginUser(email, password, auth) { success, message ->
                     if (success) {
-                        // Login bem-sucedido
                         Toast.makeText(
                             navController.context,
                             "Login realizado com sucesso!",
                             Toast.LENGTH_SHORT
                         ).show()
-                        Log.d("LoginStatus", "Login bem-sucedido para o usuário: $email")
 
                         // Navegar para a Tela Inicial após login
                         navController.navigate("telaInicial") {
                             popUpTo("login") { inclusive = true }
                         }
                     } else {
-                        // Se houve erro no login, exibe a mensagem de erro
                         errorMessage = message
-                        Log.d("LoginStatus", "Falha no login para o usuário: $email - Erro: $message")
                     }
                 }
             },
-            colors = ButtonDefaults.buttonColors(containerColor = Color(0xFF9EBD8E)),
+            colors = ButtonDefaults.buttonColors(containerColor = Color(0xFF3D7B31)),
             modifier = Modifier
                 .fillMaxWidth()
                 .padding(vertical = 16.dp)
@@ -150,9 +144,10 @@ fun LoginForm(auth: FirebaseAuth, navController: NavController) {
             )
         }
 
+        Spacer(modifier = Modifier.height(8.dp))
+
         // Links
-        TextButton(onClick = {
-            navController.navigate("telaEscolhaPacienteOuDoutor") }) {
+        TextButton(onClick = { navController.navigate("telaEscolhaPacienteOuDoutor") }) {
             Text(text = "Criar uma conta", color = Color(0xFF3D7B31))
         }
         TextButton(onClick = { /* Navegar para recuperar senha */ }) {
@@ -162,31 +157,17 @@ fun LoginForm(auth: FirebaseAuth, navController: NavController) {
 }
 
 fun loginUser(email: String, password: String, auth: FirebaseAuth, callback: (Boolean, String?) -> Unit) {
+    if (email.isBlank() || password.isBlank()) {
+        callback(false, "Por favor, preencha todos os campos.")
+        return
+    }
+
     auth.signInWithEmailAndPassword(email, password)
         .addOnCompleteListener { task ->
             if (task.isSuccessful) {
                 callback(true, null)
             } else {
-                callback(false, task.exception?.message)
+                callback(false, task.exception?.message ?: "Erro desconhecido")
             }
         }
-}
-
-fun newFunction() {
-    val channel = ManagedChannelBuilder.forAddress("localhost", 50051)
-        .usePlaintext()
-        .build()
-
-    val auth = FirebaseAuth.getInstance() // Inicialize corretamente o FirebaseAuth
-    auth.signInWithEmailAndPassword("email", "password")
-        .addOnCompleteListener { task ->
-            if (task.isSuccessful) {
-                Log.d("TAG", "signInWithEmail:success")
-                val user = auth.currentUser
-                // Faça algo com o usuário
-            } else {
-                Log.w("TAG", "signInWithEmail:failure", task.exception)
-            }
-        }
-    channel.shutdownNow().awaitTermination(5, TimeUnit.SECONDS)
 }

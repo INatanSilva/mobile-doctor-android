@@ -1,50 +1,45 @@
 package com.example.mobile_teste.navigation
 
-
 import LoginScreen
-import androidx.compose.runtime.Composable
-import androidx.navigation.NavController
-import androidx.navigation.NavGraphBuilder
-import androidx.navigation.compose.composable
-import com.example.mobile_teste.*  // Importe as telas relevantes
 import TelaInicial
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.saveable.rememberSaveable
+import androidx.navigation.NavHostController
+import androidx.navigation.compose.NavHost
+import androidx.navigation.compose.composable
+import com.example.mobile_teste.TelaEscolhaPacienteOuDoutor
+import com.example.mobile_teste.TelaRegistroDoutor
+import com.example.mobile_teste.TelaRegistroPaciente
 
 @Composable
-fun AppNavigation(navController: NavController) {
+fun AppNavigation(navController: NavHostController) {
+    val userName = rememberSaveable { mutableStateOf("") }
+    val userEmail = rememberSaveable { mutableStateOf("") }
+
     NavHost(navController = navController, startDestination = "login") {
-        // Tela de login
         composable("login") {
-            LoginScreen(navController)
-        }
-        // Tela de boas-vindas
-        composable("telaInicial") {
-            TelaInicial(navController) // Exibe a tela com "Seja bem-vindo(a)"
+            LoginScreen(navController) { name, email ->
+                userName.value = name
+                userEmail.value = email
+                navController.navigate("telaInicial")
+            }
         }
 
-        // Tela inicial para escolha de paciente ou doutor
+        composable("telaInicial") {
+            TelaInicial(navController, userName.value, userEmail.value)
+        }
+
         composable("telaEscolha") {
             TelaEscolhaPacienteOuDoutor(navController)
         }
 
-        // Tela de registro de paciente
         composable("telaRegistroPaciente") {
             TelaRegistroPaciente(navController)
         }
 
-        // Tela de registro de doutor
         composable("telaRegistroDoutor") {
             TelaRegistroDoutor(navController)
         }
-
-        // Outras rotas podem ser adicionadas aqui futuramente
     }
 }
-
-fun NavHost(
-    navController: NavController,
-    startDestination: String,
-    builder: NavGraphBuilder.() -> Unit
-) {
-    TODO("Not yet implemented")
-}
-

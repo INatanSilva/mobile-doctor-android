@@ -16,6 +16,8 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 
 // Definição das cores da paleta
@@ -26,9 +28,22 @@ object AppColors {
     val darkGreen = Color(0xFF3D7B31)
 }
 
+// ViewModel para gerenciar o estado do usuário
+class UserViewModel : ViewModel() {
+    var userName by mutableStateOf("Nome do Usuário")
+        private set
+    var userEmail by mutableStateOf("email@exemplo.com")
+        private set
+
+    fun setUser(name: String, email: String) {
+        userName = name
+        userEmail = email
+    }
+}
+
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun TelaInicial(navController: NavController) {
+fun TelaInicial(navController: NavController, userViewModel: UserViewModel = viewModel()) {
     var isDrawerOpen by remember { mutableStateOf(false) }
 
     val drawerWidth by animateDpAsState(
@@ -118,7 +133,7 @@ fun TelaInicial(navController: NavController) {
                     Spacer(modifier = Modifier.height(16.dp))
 
                     Text(
-                        text = "Nome do Usuário",
+                        text = userViewModel.userName, // Nome do usuário
                         color = AppColors.darkGreen,
                         fontSize = 18.sp,
                         textAlign = TextAlign.Center,
@@ -128,7 +143,7 @@ fun TelaInicial(navController: NavController) {
                     Spacer(modifier = Modifier.height(8.dp))
 
                     Text(
-                        text = "email@exemplo.com",
+                        text = userViewModel.userEmail, // Email do usuário
                         color = AppColors.darkGreen,
                         fontSize = 14.sp,
                         textAlign = TextAlign.Center,
@@ -136,42 +151,6 @@ fun TelaInicial(navController: NavController) {
                     )
                 }
             }
-        }
-    }
-}
-
-@Composable
-fun CardItem(imageUrl: String, title: String, navController: NavController) {
-    Card(
-        modifier = Modifier
-            .size(200.dp, 150.dp) // Tamanho do card
-            .clickable {
-                // Navega para outra tela ao clicar no card
-                navController.navigate("telaDetalhes/$title")
-            },
-        shape = MaterialTheme.shapes.medium,
-        colors = CardDefaults.cardColors(containerColor = AppColors.lightGreen)
-    ) {
-        Column(
-            modifier = Modifier.fillMaxSize(),
-            horizontalAlignment = Alignment.CenterHorizontally,
-            verticalArrangement = Arrangement.SpaceBetween
-        ) {
-            // Imagem no Card (Substituir com Coil ou outro carregador de imagens)
-            Box(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .height(100.dp)
-                    .background(Color.Gray) // Placeholder para a imagem
-            )
-
-            Text(
-                text = title,
-                color = AppColors.darkGreen,
-                fontSize = 16.sp,
-                textAlign = TextAlign.Center,
-                modifier = Modifier.padding(8.dp)
-            )
         }
     }
 }
