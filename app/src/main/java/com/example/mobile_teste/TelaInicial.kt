@@ -43,7 +43,12 @@ class UserViewModel : ViewModel() {
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun TelaInicial(navController: NavController, userViewModel: UserViewModel = viewModel()) {
+fun TelaInicial(
+    navController: NavController,
+    userViewModel: UserViewModel = viewModel(),
+    userEmail: String,
+    userName: String
+) {
     var isDrawerOpen by remember { mutableStateOf(false) }
 
     val drawerWidth by animateDpAsState(
@@ -153,4 +158,10 @@ fun TelaInicial(navController: NavController, userViewModel: UserViewModel = vie
             }
         }
     }
+}
+
+@Composable
+fun CardItem(imageUrl: String, title: String, navController: NavController) {
+
+
 }

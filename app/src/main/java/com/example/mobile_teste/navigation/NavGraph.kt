@@ -14,6 +14,7 @@ import com.example.mobile_teste.TelaRegistroPaciente
 
 @Composable
 fun AppNavigation(navController: NavHostController) {
+    // Usando 'rememberSaveable' para lembrar os dados entre recomposições
     val userName = rememberSaveable { mutableStateOf("") }
     val userEmail = rememberSaveable { mutableStateOf("") }
 
@@ -21,13 +22,21 @@ fun AppNavigation(navController: NavHostController) {
         composable("login") {
             LoginScreen(navController) { name, email ->
                 userName.value = name
-                userEmail.value = email
-                navController.navigate("telaInicial")
+                userEmail.value = email as String
+                navController.navigate("telaInicial") {
+                    // Garantir que o parâmetro seja passado ao navegar
+                    launchSingleTop = true
+                }
             }
         }
 
         composable("telaInicial") {
-            TelaInicial(navController, userName.value, userEmail.value)
+            // Passando o valor de 'userName' e 'userEmail' diretamente para a TelaInicial
+            TelaInicial(
+                navController = navController,
+                userName = userName.value,
+                userEmail = userEmail.value
+            )
         }
 
         composable("telaEscolha") {

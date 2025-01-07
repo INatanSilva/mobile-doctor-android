@@ -1,4 +1,3 @@
-import android.util.Log
 import android.widget.Toast
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
@@ -21,7 +20,7 @@ import androidx.navigation.NavController
 import com.google.firebase.auth.FirebaseAuth
 
 @Composable
-fun LoginScreen(navController: NavController, onLogin: (String, String) -> Unit) {
+fun LoginScreen(navController: NavController, onLogin: (String, Any?) -> Unit) {
     val auth = FirebaseAuth.getInstance() // Inicializa o FirebaseAuth
 
     MaterialTheme {
