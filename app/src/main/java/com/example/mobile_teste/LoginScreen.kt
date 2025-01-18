@@ -27,7 +27,7 @@ fun LoginScreen(navController: NavController, onLogin: (String, Any?) -> Unit) {
         Box(
             modifier = Modifier
                 .fillMaxSize()
-                .background(Color(0xFFFFFDEC)), // Fundo claro
+                .background(Color(0xFFE6F7E5)), // Fundo claro
             contentAlignment = Alignment.Center
         ) {
             Column(
