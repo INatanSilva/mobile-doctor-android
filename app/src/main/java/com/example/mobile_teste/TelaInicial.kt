@@ -26,6 +26,7 @@ object AppColors {
     val pastelGreen = Color(0xFFE6F7E5)
     val lightGreen = Color(0xFFB8D8B7)
     val darkGreen = Color(0xFF3D7B31)
+    val white = Color(0xFFFFFFFF)
 }
 
 // ViewModel para gerenciar o estado do usuário
@@ -66,11 +67,11 @@ fun TelaInicial(
                             Icon(
                                 imageVector = Icons.Default.Menu,
                                 contentDescription = "Menu",
-                                tint = AppColors.pastelGreen
+                                tint = AppColors.white
                             )
                         }
                     },
-                    title = { Text("PsyConnect", color = AppColors.pastelGreen) },
+                    title = { Text("PsyConnect", color = AppColors.white) },
                     colors = TopAppBarDefaults.topAppBarColors(
                         containerColor = AppColors.darkGreen
                     )
@@ -128,6 +129,7 @@ fun TelaInicial(
                         .padding(16.dp),
                     horizontalAlignment = Alignment.CenterHorizontally // Centraliza horizontalmente
                 ) {
+                    // Ícone de perfil
                     Icon(
                         imageVector = Icons.Default.Person,
                         contentDescription = "Perfil do Usuário",
@@ -137,8 +139,9 @@ fun TelaInicial(
 
                     Spacer(modifier = Modifier.height(16.dp))
 
+                    // Nome do usuário
                     Text(
-                        text = userViewModel.userName, // Nome do usuário
+                        text = userViewModel.userName,
                         color = AppColors.darkGreen,
                         fontSize = 18.sp,
                         textAlign = TextAlign.Center,
@@ -147,13 +150,45 @@ fun TelaInicial(
 
                     Spacer(modifier = Modifier.height(8.dp))
 
+                    // Email do usuário
                     Text(
-                        text = userViewModel.userEmail, // Email do usuário
+                        text = userViewModel.userEmail,
                         color = AppColors.darkGreen,
                         fontSize = 14.sp,
                         textAlign = TextAlign.Center,
                         modifier = Modifier.fillMaxWidth()
                     )
+
+                    Spacer(modifier = Modifier.height(16.dp))
+
+                    // Linha divisória
+                    Divider(
+                        color = AppColors.white,
+                        thickness = 1.dp,
+                        modifier = Modifier.fillMaxWidth()
+                    )
+
+                    Spacer(modifier = Modifier.height(16.dp))
+
+                    // Seção de "Perfil"
+                    Column(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .clickable {
+                                // Navegar para TelaPerfil
+                                navController.navigate("TelaPerfil")
+                            }
+                            .padding(vertical = 8.dp),
+                        horizontalAlignment = Alignment.CenterHorizontally
+                    ) {
+                        Text(
+                            text = "Perfil",
+                            color = AppColors.darkGreen,
+                            fontSize = 16.sp,
+                            textAlign = TextAlign.Center,
+                            modifier = Modifier.fillMaxWidth()
+                        )
+                    }
                 }
             }
         }
