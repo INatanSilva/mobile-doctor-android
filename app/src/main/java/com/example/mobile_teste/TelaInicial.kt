@@ -162,6 +162,40 @@ fun TelaInicial(
 
 @Composable
 fun CardItem(imageUrl: String, title: String, navController: NavController) {
+    Card(
+        modifier = Modifier
+            .size(150.dp)
+            .clickable {
+                navController.navigate("detalhes/$title")
+            },
+        colors = CardDefaults.cardColors(
+            containerColor = AppColors.pastelGreen
+        )
+    ) {
+        Column(
+            modifier = Modifier
+                .fillMaxSize()
+                .padding(8.dp),
+            horizontalAlignment = Alignment.CenterHorizontally,
+            verticalArrangement = Arrangement.SpaceBetween
+        ) {
+            // Imagem do Card
+            Box(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .height(100.dp)
+                    .background(Color.Gray) // Substitua por um AsyncImage para carregar a imagem real
+            )
 
-
+            // Título do Card
+            Text(
+                text = title,
+                fontSize = 16.sp,
+                color = AppColors.darkGreen,
+                textAlign = TextAlign.Center,
+                modifier = Modifier.fillMaxWidth()
+            )
+        }
+    }
 }
+
