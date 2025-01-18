@@ -79,7 +79,6 @@ class MainActivity : ComponentActivity() {
                         // Tela inicial
                         composable("telaInicial") {
                             TelaInicial(
-                                navController = navController,
                                 userEmail = userEmail,
                                 userName = userName
                             )

@@ -33,7 +33,6 @@ fun AppNavigation(navController: NavHostController) {
         composable("telaInicial") {
             // Passando o valor de 'userName' e 'userEmail' diretamente para a TelaInicial
             TelaInicial(
-                navController = navController,
                 userName = userName.value,
                 userEmail = userEmail.value
             )
