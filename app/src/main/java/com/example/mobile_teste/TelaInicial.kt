@@ -1,26 +1,23 @@
-import androidx.compose.animation.core.Spring
-import androidx.compose.animation.core.animateDpAsState
-import androidx.compose.animation.core.spring
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyRow
+import androidx.compose.foundation.lazy.items
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Menu
-import androidx.compose.material.icons.filled.Person
+import androidx.compose.material.icons.filled.AccountCircle
+import androidx.compose.material.icons.filled.DateRange
+import androidx.compose.material.icons.filled.Home
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
-import androidx.lifecycle.ViewModel
-import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
+import androidx.navigation.compose.currentBackStackEntryAsState
 
-// Definição das cores da paleta
 object AppColors {
     val background = Color(0xFFFFFEC)
     val pastelGreen = Color(0xFFE6F7E5)
@@ -29,166 +26,103 @@ object AppColors {
     val white = Color(0xFFFFFFFF)
 }
 
-// ViewModel para gerenciar o estado do usuário
-class UserViewModel : ViewModel() {
-    var userName by mutableStateOf("Nome do Usuário")
-        private set
-    var userEmail by mutableStateOf("email@exemplo.com")
-        private set
-
-    fun setUser(name: String, email: String) {
-        userName = name
-        userEmail = email
-    }
-}
+data class BottomNavItem(
+    val route: String,
+    val icon: ImageVector
+)
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun TelaInicial(
     navController: NavController,
-    userViewModel: UserViewModel = viewModel(),
     userEmail: String,
     userName: String
 ) {
-    var isDrawerOpen by remember { mutableStateOf(false) }
-
-    val drawerWidth by animateDpAsState(
-        targetValue = if (isDrawerOpen) 250.dp else 0.dp,
-        animationSpec = spring(stiffness = Spring.StiffnessLow)
+    val navItems = listOf(
+        BottomNavItem(
+            route = "consultas",
+            icon = Icons.Filled.DateRange
+        ),
+        BottomNavItem(
+            route = "inicio",
+            icon = Icons.Filled.Home
+        ),
+        BottomNavItem(
+            route = "perfil",
+            icon = Icons.Filled.AccountCircle
+        )
     )
 
-    Box(modifier = Modifier.fillMaxSize()) {
-        // Conteúdo Principal
-        Scaffold(
-            topBar = {
-                TopAppBar(
-                    navigationIcon = {
-                        IconButton(onClick = { isDrawerOpen = !isDrawerOpen }) {
-                            Icon(
-                                imageVector = Icons.Default.Menu,
-                                contentDescription = "Menu",
-                                tint = AppColors.white
-                            )
-                        }
-                    },
-                    title = { Text("PsyConnect", color = AppColors.white) },
-                    colors = TopAppBarDefaults.topAppBarColors(
-                        containerColor = AppColors.darkGreen
-                    )
-                )
-            },
-            content = { paddingValues: PaddingValues ->
-                Column(
-                    modifier = Modifier
-                        .fillMaxSize()
-                        .background(AppColors.background)
-                        .padding(paddingValues)
-                ) {
-                    Spacer(modifier = Modifier.height(16.dp))
+    val navBackStackEntry by navController.currentBackStackEntryAsState()
+    val rotaAtual = navBackStackEntry?.destination?.route
 
-                    // LazyRow com os Cards
-                    LazyRow(
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .padding(horizontal = 8.dp),
-                        horizontalArrangement = Arrangement.spacedBy(8.dp)
-                    ) {
-                        items(3) { index -> // Substitua 5 pelo número de itens que você deseja
-                            CardItem(
-                                imageUrl = "https://via.placeholder.com/150", // Substitua pela URL real da imagem
-                                title = "Card $index",
-                                navController = navController
+    val cards = List(3) { index -> "Card $index" }
+
+    Scaffold(
+        topBar = {
+            TopAppBar(
+                title = { Text("PsyConnect", color = AppColors.white) },
+                colors = TopAppBarDefaults.topAppBarColors(
+                    containerColor = AppColors.darkGreen
+                )
+            )
+        },
+        bottomBar = {
+            NavigationBar(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .height(60.dp),
+                containerColor = AppColors.darkGreen,
+                contentColor = AppColors.white
+            ) {
+                navItems.forEachIndexed { index, item ->
+                    val selecionado = rotaAtual == item.route
+
+                    NavigationBarItem(
+                        selected = selecionado,
+                        onClick = {
+                            navController.navigate(item.route) {
+                                popUpTo(navController.graph.startDestinationId)
+                                launchSingleTop = true
+                            }
+                        },
+                        icon = {
+                            Icon(
+                                imageVector = item.icon,
+                                contentDescription = item.route,
+                                modifier = Modifier.size(26.dp)
                             )
-                        }
-                    }
+                        },
+                        colors = NavigationBarItemDefaults.colors(
+                            selectedIconColor = AppColors.white,
+                            unselectedIconColor = AppColors.white.copy(alpha = 0.7f),
+                            indicatorColor = AppColors.lightGreen
+                        )
+                    )
                 }
             }
-        )
-
-        // Drawer Overlay (escurece o fundo quando o Drawer está aberto)
-        if (isDrawerOpen) {
-            Box(
-                modifier = Modifier
-                    .fillMaxSize()
-                    .background(Color.Black.copy(alpha = 0.5f))
-                    .clickable { isDrawerOpen = false }
-            )
         }
+    ) { paddingValues ->
+        Column(
+            modifier = Modifier
+                .fillMaxSize()
+                .background(AppColors.background)
+                .padding(paddingValues)
+        ) {
+            Spacer(modifier = Modifier.height(16.dp))
 
-        // Drawer
-        if (isDrawerOpen) { // O conteúdo do Drawer só será exibido se estiver aberto
-            Box(
+            LazyRow(
                 modifier = Modifier
-                    .fillMaxHeight()
-                    .width(drawerWidth)
-                    .background(AppColors.lightGreen)
+                    .fillMaxWidth()
+                    .padding(horizontal = 8.dp),
+                horizontalArrangement = Arrangement.spacedBy(8.dp)
             ) {
-                Column(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(16.dp),
-                    horizontalAlignment = Alignment.CenterHorizontally // Centraliza horizontalmente
-                ) {
-                    // Ícone de perfil
-                    Icon(
-                        imageVector = Icons.Default.Person,
-                        contentDescription = "Perfil do Usuário",
-                        modifier = Modifier.size(80.dp),
-                        tint = AppColors.darkGreen
+                items(cards) { cardTitle ->
+                    CardItem(
+                        imageUrl = "https://via.placeholder.com/150",
+                        title = cardTitle,
+                        navController = navController
                     )
-
-                    Spacer(modifier = Modifier.height(16.dp))
-
-                    // Nome do usuário
-                    Text(
-                        text = userViewModel.userName,
-                        color = AppColors.darkGreen,
-                        fontSize = 18.sp,
-                        textAlign = TextAlign.Center,
-                        modifier = Modifier.fillMaxWidth()
-                    )
-
-                    Spacer(modifier = Modifier.height(8.dp))
-
-                    // Email do usuário
-                    Text(
-                        text = userViewModel.userEmail,
-                        color = AppColors.darkGreen,
-                        fontSize = 14.sp,
-                        textAlign = TextAlign.Center,
-                        modifier = Modifier.fillMaxWidth()
-                    )
-
-                    Spacer(modifier = Modifier.height(16.dp))
-
-                    // Linha divisória
-                    Divider(
-                        color = AppColors.white,
-                        thickness = 1.dp,
-                        modifier = Modifier.fillMaxWidth()
-                    )
-
-                    Spacer(modifier = Modifier.height(16.dp))
-
-                    // Seção de "Perfil"
-                    Column(
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .clickable {
-                                // Navegar para TelaPerfil
-                                navController.navigate("TelaPerfil")
-                            }
-                            .padding(vertical = 8.dp),
-                        horizontalAlignment = Alignment.CenterHorizontally
-                    ) {
-                        Text(
-                            text = "Perfil",
-                            color = AppColors.darkGreen,
-                            fontSize = 16.sp,
-                            textAlign = TextAlign.Center,
-                            modifier = Modifier.fillMaxWidth()
-                        )
-                    }
                 }
             }
         }
@@ -196,7 +130,11 @@ fun TelaInicial(
 }
 
 @Composable
-fun CardItem(imageUrl: String, title: String, navController: NavController) {
+fun CardItem(
+    imageUrl: String,
+    title: String,
+    navController: NavController
+) {
     Card(
         modifier = Modifier
             .size(150.dp)
@@ -214,18 +152,15 @@ fun CardItem(imageUrl: String, title: String, navController: NavController) {
             horizontalAlignment = Alignment.CenterHorizontally,
             verticalArrangement = Arrangement.SpaceBetween
         ) {
-            // Imagem do Card
             Box(
                 modifier = Modifier
                     .fillMaxWidth()
                     .height(100.dp)
-                    .background(Color.Gray) // Substitua por um AsyncImage para carregar a imagem real
+                    .background(Color.Gray)
             )
 
-            // Título do Card
             Text(
                 text = title,
-                fontSize = 16.sp,
                 color = AppColors.darkGreen,
                 textAlign = TextAlign.Center,
                 modifier = Modifier.fillMaxWidth()
@@ -233,4 +168,3 @@ fun CardItem(imageUrl: String, title: String, navController: NavController) {
         }
     }
 }
-
