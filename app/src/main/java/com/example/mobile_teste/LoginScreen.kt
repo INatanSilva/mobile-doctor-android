@@ -1,6 +1,5 @@
 import android.widget.Toast
-import androidx.compose.foundation.background
-import androidx.compose.foundation.border
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
@@ -11,43 +10,57 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.text.input.VisualTransformation
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
+import com.example.mobile_teste.R
 import com.google.firebase.auth.FirebaseAuth
 
 @Composable
 fun LoginScreen(navController: NavController, onLogin: (String, Any?) -> Unit) {
-    val auth = FirebaseAuth.getInstance() // Inicializa o FirebaseAuth
+    val auth = FirebaseAuth.getInstance()
 
     MaterialTheme {
         Box(
             modifier = Modifier
                 .fillMaxSize()
-                .background(Color(0xFFE6F7E5)), // Fundo claro
+                .padding(16.dp),
             contentAlignment = Alignment.Center
         ) {
             Column(
                 horizontalAlignment = Alignment.CenterHorizontally,
                 verticalArrangement = Arrangement.Center,
                 modifier = Modifier
-                    .padding(16.dp)
                     .fillMaxWidth()
-                    .background(Color.White, shape = RoundedCornerShape(16.dp))
-                    .border(2.dp, Color(0xFFB8D8B7), RoundedCornerShape(16.dp))
-                    .padding(24.dp)
             ) {
-                Text(
-                    text = "Bem-vindo(a)",
-                    fontSize = 24.sp,
-                    fontWeight = FontWeight.Bold,
-                    color = Color(0xFF3D7B31) // Verde escuro
+                // Logo
+                Image(
+                    painter = painterResource(id = R.drawable.logopsy_playstore), // Use o nome correto do recurso aqui
+                    contentDescription = "Logo",
+                    modifier = Modifier.size(80.dp),
+                    contentScale = ContentScale.Fit
                 )
-                Spacer(modifier = Modifier.height(16.dp))
+
+                Spacer(modifier = Modifier.height(24.dp))
+
+                // Formulário de login
                 LoginForm(auth, navController)
+
+                Spacer(modifier = Modifier.height(24.dp))
+
+                // Rodapé com a mensagem
+                Text(
+                    text = "Conectando mentes\nTransformando vidas.",
+                    fontSize = 14.sp,
+                    color = Color.Gray,
+                    textAlign = TextAlign.Center
+                )
             }
         }
     }
@@ -66,17 +79,15 @@ fun LoginForm(auth: FirebaseAuth, navController: NavController) {
         OutlinedTextField(
             value = email,
             onValueChange = { email = it },
-            label = { Text("E-mail") },
+            label = { Text("Email") },
             singleLine = true,
-            colors = TextFieldDefaults.outlinedTextFieldColors(
-                focusedBorderColor = Color(0xFF3D7B31),
-                unfocusedBorderColor = Color(0xFF9EBD8E),
-                focusedLabelColor = Color(0xFF3D7B31),
-                unfocusedLabelColor = Color(0xFF9EBD8E)
-            ),
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(vertical = 8.dp)
+                .padding(vertical = 8.dp),
+            colors = TextFieldDefaults.outlinedTextFieldColors(
+                focusedBorderColor = Color.Gray,
+                unfocusedBorderColor = Color.LightGray
+            )
         )
 
         // Campo de Senha
@@ -92,15 +103,13 @@ fun LoginForm(auth: FirebaseAuth, navController: NavController) {
                     Icon(imageVector = icon, contentDescription = null)
                 }
             },
-            colors = TextFieldDefaults.outlinedTextFieldColors(
-                focusedBorderColor = Color(0xFF3D7B31),
-                unfocusedBorderColor = Color(0xFF9EBD8E),
-                focusedLabelColor = Color(0xFF3D7B31),
-                unfocusedLabelColor = Color(0xFF9EBD8E)
-            ),
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(vertical = 8.dp)
+                .padding(vertical = 8.dp),
+            colors = TextFieldDefaults.outlinedTextFieldColors(
+                focusedBorderColor = Color.Gray,
+                unfocusedBorderColor = Color.LightGray
+            )
         )
 
         // Botão de Login
@@ -114,7 +123,6 @@ fun LoginForm(auth: FirebaseAuth, navController: NavController) {
                             Toast.LENGTH_SHORT
                         ).show()
 
-                        // Navegar para a Tela Inicial após login
                         navController.navigate("telaInicial") {
                             popUpTo("login") { inclusive = true }
                         }
@@ -123,14 +131,24 @@ fun LoginForm(auth: FirebaseAuth, navController: NavController) {
                     }
                 }
             },
-            colors = ButtonDefaults.buttonColors(containerColor = Color(0xFF3D7B31)),
             modifier = Modifier
                 .fillMaxWidth()
                 .padding(vertical = 16.dp)
                 .height(48.dp),
-            shape = RoundedCornerShape(24.dp)
+            shape = RoundedCornerShape(8.dp),
+            colors = ButtonDefaults.buttonColors(containerColor = Color.Black)
         ) {
             Text(text = "Entrar", color = Color.White)
+        }
+
+        // Link de recuperar senha
+        TextButton(onClick = { /* Navegar para recuperar senha */ }) {
+            Text(text = "Esqueci minha senha", color = Color(0xFF00BFFF)) // Azul claro
+        }
+
+        // Link de criar conta
+        TextButton(onClick = { navController.navigate("telaEscolhaPacienteOuDoutor") }) {
+            Text(text = "Criar uma conta PsyConnect", color = Color(0xFF00BFFF))
         }
 
         // Mensagem de erro
@@ -141,16 +159,6 @@ fun LoginForm(auth: FirebaseAuth, navController: NavController) {
                 fontSize = 14.sp,
                 modifier = Modifier.padding(top = 8.dp)
             )
-        }
-
-        Spacer(modifier = Modifier.height(8.dp))
-
-        // Links
-        TextButton(onClick = { navController.navigate("telaEscolhaPacienteOuDoutor") }) {
-            Text(text = "Criar uma conta", color = Color(0xFF3D7B31))
-        }
-        TextButton(onClick = { /* Navegar para recuperar senha */ }) {
-            Text(text = "Esqueci minha senha", color = Color(0xFF3D7B31))
         }
     }
 }
