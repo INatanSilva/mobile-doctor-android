@@ -1,7 +1,6 @@
 package com.example.mobile_teste
 
 import android.util.Log
-import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.*
@@ -24,40 +23,39 @@ fun TelaEscolhaPacienteOuDoutor(navController: NavController) {
         verticalArrangement = Arrangement.Center,
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
-        Button(
-            onClick = {
-                escolha = "Paciente" // Atualiza a variável com a escolha
-                Log.d("EscolhaUsuario", "Escolha: $escolha") // Registra no console
-                navController.navigate("registroPaciente") // Navega para a TelaRegistroPaciente
-            },
-            modifier = Modifier
-                .width(200.dp)
-                .padding(vertical = 15.dp)
-                .border(2.dp, Color(0xFF8B9F8E), RoundedCornerShape(20.dp)),
-            colors = ButtonDefaults.buttonColors(
-                containerColor = Color(0xFFB8D8B7), // Cor verde mais suave no fundo do botão
-                contentColor = Color.Black // Texto preto
-            )
+        Column(
+            verticalArrangement = Arrangement.spacedBy(10.dp), // Espaçamento menor entre os botões
+            horizontalAlignment = Alignment.CenterHorizontally
         ) {
-            Text("Paciente")
-        }
+            Button(
+                onClick = {
+                    escolha = "Paciente"
+                    Log.d("EscolhaUsuario", "Escolha: $escolha")
+                    navController.navigate("registroPaciente")
+                },
+                modifier = Modifier
+                    .width(200.dp)
+                    .height(48.dp),
+                shape = RoundedCornerShape(8.dp),
+                colors = ButtonDefaults.buttonColors(containerColor = Color.Black)
+            ) {
+                Text(text = "Paciente", color = Color.White)
+            }
 
-        Button(
-            onClick = {
-                escolha = "Doutor" // Atualiza a variável com a escolha
-                Log.d("EscolhaUsuario", "Escolha: $escolha") // Registra no console
-                navController.navigate("telaRegistroDoutor") // Navega para a TelaRegistroDoutor
-            },
-            modifier = Modifier
-                .width(200.dp)
-                .padding(vertical = 8.dp)
-                .border(2.dp, Color(0xFF8B9F8E), RoundedCornerShape(20.dp)),
-            colors = ButtonDefaults.buttonColors(
-                containerColor = Color(0xFFB8D8B7), // Cor verde mais suave no fundo do botão
-                contentColor = Color.Black // Texto preto
-            )
-        ) {
-            Text("Doutor")
+            Button(
+                onClick = {
+                    escolha = "Doutor"
+                    Log.d("EscolhaUsuario", "Escolha: $escolha")
+                    navController.navigate("telaRegistroDoutor")
+                },
+                modifier = Modifier
+                    .width(200.dp)
+                    .height(48.dp),
+                shape = RoundedCornerShape(8.dp),
+                colors = ButtonDefaults.buttonColors(containerColor = Color.Black)
+            ) {
+                Text(text = "Doutor", color = Color.White)
+            }
         }
     }
 }

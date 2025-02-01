@@ -41,9 +41,9 @@ fun LoginScreen(navController: NavController, onLogin: (String, Any?) -> Unit) {
             ) {
                 // Logo
                 Image(
-                    painter = painterResource(id = R.drawable.logopsy_playstore), // Use o nome correto do recurso aqui
+                    painter = painterResource(id = R.drawable.logopsy_playstore),
                     contentDescription = "Logo",
-                    modifier = Modifier.size(80.dp),
+                    modifier = Modifier.size(90.dp),
                     contentScale = ContentScale.Fit
                 )
 
@@ -57,7 +57,7 @@ fun LoginScreen(navController: NavController, onLogin: (String, Any?) -> Unit) {
                 // Rodapé com a mensagem
                 Text(
                     text = "Conectando mentes\nTransformando vidas.",
-                    fontSize = 14.sp,
+                    fontSize = 16.sp,
                     color = Color.Gray,
                     textAlign = TextAlign.Center
                 )
