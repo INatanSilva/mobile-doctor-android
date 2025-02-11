@@ -16,10 +16,9 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.LayoutDirection
 
 object AppColors {
-    val background = Color(0xFFFFFEC)
-    val pastelGreen = Color(0xFFE6F7E5)
-    val lightGreen = Color(0xFFB8D8B7)
-    val darkGreen = Color(0xFF3D7B31)
+    val background = Color(0xFF000000)
+    val primary = Color(0xFF1E1E1E)
+    val accent = Color(0xFF2196F3)
     val white = Color(0xFFFFFFFF)
 }
 
@@ -49,14 +48,14 @@ fun TelaInicial(
         )
     )
 
-    var selectedTab by remember { mutableStateOf(0) } // Indica qual aba está selecionada
+    var selectedTab by remember { mutableStateOf(1) } // Começa na tela de início
 
     Scaffold(
         topBar = {
             TopAppBar(
                 title = { Text("PsyConnect", color = AppColors.white) },
                 colors = TopAppBarDefaults.topAppBarColors(
-                    containerColor = AppColors.darkGreen
+                    containerColor = AppColors.primary
                 )
             )
         },
@@ -65,7 +64,7 @@ fun TelaInicial(
                 modifier = Modifier
                     .fillMaxWidth()
                     .height(80.dp),
-                containerColor = AppColors.darkGreen,
+                containerColor = AppColors.primary,
                 contentColor = AppColors.white
             ) {
                 navItems.forEachIndexed { index, item ->
@@ -83,9 +82,9 @@ fun TelaInicial(
                             )
                         },
                         colors = NavigationBarItemDefaults.colors(
-                            selectedIconColor = AppColors.white,
+                            selectedIconColor = AppColors.accent,
                             unselectedIconColor = AppColors.white.copy(alpha = 0.7f),
-                            indicatorColor = AppColors.lightGreen
+                            indicatorColor = AppColors.primary
                         )
                     )
                 }
@@ -103,7 +102,6 @@ fun TelaInicial(
                     bottom = paddingValues.calculateBottomPadding()
                 )
         ) {
-            // Exibindo diretamente o conteúdo da aba selecionada
             when (selectedTab) {
                 0 -> TelaConsultas()
                 1 -> TelaInicio()
@@ -118,10 +116,10 @@ fun TelaConsultas() {
     Box(
         modifier = Modifier
             .fillMaxSize()
-            .background(AppColors.pastelGreen),
+            .background(AppColors.primary),
         contentAlignment = Alignment.Center
     ) {
-        Text("Tela de Consultas", color = AppColors.darkGreen, style = TextStyle(fontSize = MaterialTheme.typography.titleLarge.fontSize))
+        Text("Tela de Consultas", color = AppColors.accent, style = TextStyle(fontSize = MaterialTheme.typography.titleLarge.fontSize))
     }
 }
 
@@ -130,10 +128,10 @@ fun TelaInicio() {
     Box(
         modifier = Modifier
             .fillMaxSize()
-            .background(AppColors.lightGreen),
+            .background(AppColors.primary),
         contentAlignment = Alignment.Center
     ) {
-        Text("Tela Inicial", color = AppColors.darkGreen, style = TextStyle(fontSize = MaterialTheme.typography.titleLarge.fontSize))
+        Text("Tela Inicial", color = AppColors.accent, style = TextStyle(fontSize = MaterialTheme.typography.titleLarge.fontSize))
     }
 }
 
@@ -142,10 +140,10 @@ fun TelaPerfil() {
     Box(
         modifier = Modifier
             .fillMaxSize()
-            .background(AppColors.pastelGreen),
+            .background(AppColors.primary),
         contentAlignment = Alignment.Center
     ) {
-        Text("Tela de Perfil", color = AppColors.darkGreen, style = TextStyle(fontSize = MaterialTheme.typography.titleLarge.fontSize))
+        Text("Tela de Perfil", color = AppColors.accent, style = TextStyle(fontSize = MaterialTheme.typography.titleLarge.fontSize))
     }
 }
 

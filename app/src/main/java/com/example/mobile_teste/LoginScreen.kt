@@ -143,7 +143,7 @@ fun LoginForm(auth: FirebaseAuth, navController: NavController) {
 
         // Link de recuperar senha
         TextButton(onClick = { /* Navegar para recuperar senha */ }) {
-            Text(text = "Esqueci minha senha", color = Color(0xFF00BFFF)) // Azul claro
+            Text(text = "Esqueci minha senha", color = Color(0xFF00BFFF)) // Azul claro 
         }
 
         // Link de criar conta

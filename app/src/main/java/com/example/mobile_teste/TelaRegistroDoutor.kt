@@ -65,7 +65,7 @@ fun TelaRegistroDoutorScreen(navController: NavController) {
                 .padding(16.dp)
         ) {
             Column {
-                // Nome
+
                 Text("Nome", color = Color(0xFF3D7B31))  // Cor do texto principal (verde escuro)
                 BasicTextField(
                     value = nome,
@@ -79,7 +79,6 @@ fun TelaRegistroDoutorScreen(navController: NavController) {
 
                 Spacer(modifier = Modifier.height(16.dp))
 
-                // Apelido
                 Text("Apelido", color = Color(0xFF3D7B31))  // Cor do texto principal (verde escuro)
                 BasicTextField(
                     value = apelido,
@@ -93,7 +92,6 @@ fun TelaRegistroDoutorScreen(navController: NavController) {
 
                 Spacer(modifier = Modifier.height(16.dp))
 
-                // Idade
                 Text("Idade", color = Color(0xFF3D7B31))  // Cor do texto principal (verde escuro)
                 BasicTextField(
                     value = idade,
