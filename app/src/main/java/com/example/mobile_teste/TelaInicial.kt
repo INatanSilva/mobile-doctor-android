@@ -4,6 +4,8 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.AccountCircle
 import androidx.compose.material.icons.filled.DateRange
 import androidx.compose.material.icons.filled.Home
+import androidx.compose.material.icons.filled.DarkMode
+import androidx.compose.material.icons.filled.LightMode
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
@@ -16,10 +18,15 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.LayoutDirection
 
 object AppColors {
-    val background = Color(0xFF000000)
-    val primary = Color(0xFF1E1E1E)
-    val accent = Color(0xFF2196F3)
-    val white = Color(0xFFFFFFFF)
+    val darkBackground = Color(0xFF000000)
+    val darkPrimary = Color(0xFF1E1E1E)
+    val darkAccent = Color(0xFF2196F3)
+    val darkWhite = Color(0xFFFFFFFF)
+
+    val lightBackground = Color(0xFFFFFFFF)
+    val lightPrimary = Color(0xFFEEEEEE)
+    val lightAccent = Color(0xFF1976D2)
+    val lightBlack = Color(0xFF000000)
 }
 
 data class BottomNavItem(
@@ -33,6 +40,12 @@ fun TelaInicial(
     userEmail: String,
     userName: String
 ) {
+    var isDarkMode by remember { mutableStateOf(true) }
+    val backgroundColor = if (isDarkMode) AppColors.darkBackground else AppColors.lightBackground
+    val primaryColor = if (isDarkMode) AppColors.darkPrimary else AppColors.lightPrimary
+    val accentColor = if (isDarkMode) AppColors.darkAccent else AppColors.lightAccent
+    val textColor = if (isDarkMode) AppColors.darkWhite else AppColors.lightBlack
+
     val navItems = listOf(
         BottomNavItem(
             route = "consultas",
@@ -53,10 +66,19 @@ fun TelaInicial(
     Scaffold(
         topBar = {
             TopAppBar(
-                title = { Text("PsyConnect", color = AppColors.white) },
+                title = { Text("PsyConnect", color = textColor) },
                 colors = TopAppBarDefaults.topAppBarColors(
-                    containerColor = AppColors.primary
-                )
+                    containerColor = primaryColor
+                ),
+                actions = {
+                    IconButton(onClick = { isDarkMode = !isDarkMode }) {
+                        Icon(
+                            imageVector = if (isDarkMode) Icons.Filled.LightMode else Icons.Filled.DarkMode,
+                            contentDescription = "Alternar Tema",
+                            tint = textColor
+                        )
+                    }
+                }
             )
         },
         bottomBar = {
@@ -64,8 +86,8 @@ fun TelaInicial(
                 modifier = Modifier
                     .fillMaxWidth()
                     .height(80.dp),
-                containerColor = AppColors.primary,
-                contentColor = AppColors.white
+                containerColor = primaryColor,
+                contentColor = textColor
             ) {
                 navItems.forEachIndexed { index, item ->
                     val selecionado = selectedTab == index
@@ -82,9 +104,9 @@ fun TelaInicial(
                             )
                         },
                         colors = NavigationBarItemDefaults.colors(
-                            selectedIconColor = AppColors.accent,
-                            unselectedIconColor = AppColors.white.copy(alpha = 0.7f),
-                            indicatorColor = AppColors.primary
+                            selectedIconColor = accentColor,
+                            unselectedIconColor = textColor.copy(alpha = 0.7f),
+                            indicatorColor = primaryColor
                         )
                     )
                 }
@@ -94,7 +116,7 @@ fun TelaInicial(
         Column(
             modifier = Modifier
                 .fillMaxSize()
-                .background(AppColors.background)
+                .background(backgroundColor)
                 .padding(
                     start = paddingValues.calculateStartPadding(LayoutDirection.Ltr),
                     top = paddingValues.calculateTopPadding(),
@@ -103,47 +125,47 @@ fun TelaInicial(
                 )
         ) {
             when (selectedTab) {
-                0 -> TelaConsultas()
-                1 -> TelaInicio()
-                2 -> TelaPerfil()
+                0 -> TelaConsultas(primaryColor, accentColor, textColor)
+                1 -> TelaInicio(primaryColor, accentColor, textColor)
+                2 -> TelaPerfil(primaryColor, accentColor, textColor)
             }
         }
     }
 }
 
 @Composable
-fun TelaConsultas() {
+fun TelaConsultas(primaryColor: Color, accentColor: Color, textColor: Color) {
     Box(
         modifier = Modifier
             .fillMaxSize()
-            .background(AppColors.primary),
+            .background(primaryColor),
         contentAlignment = Alignment.Center
     ) {
-        Text("Tela de Consultas", color = AppColors.accent, style = TextStyle(fontSize = MaterialTheme.typography.titleLarge.fontSize))
+        Text("Tela de Consultas", color = accentColor, style = TextStyle(fontSize = MaterialTheme.typography.titleLarge.fontSize))
     }
 }
 
 @Composable
-fun TelaInicio() {
+fun TelaInicio(primaryColor: Color, accentColor: Color, textColor: Color) {
     Box(
         modifier = Modifier
             .fillMaxSize()
-            .background(AppColors.primary),
+            .background(primaryColor),
         contentAlignment = Alignment.Center
     ) {
-        Text("Tela Inicial", color = AppColors.accent, style = TextStyle(fontSize = MaterialTheme.typography.titleLarge.fontSize))
+        Text("Tela Inicial", color = accentColor, style = TextStyle(fontSize = MaterialTheme.typography.titleLarge.fontSize))
     }
 }
 
 @Composable
-fun TelaPerfil() {
+fun TelaPerfil(primaryColor: Color, accentColor: Color, textColor: Color) {
     Box(
         modifier = Modifier
             .fillMaxSize()
-            .background(AppColors.primary),
+            .background(primaryColor),
         contentAlignment = Alignment.Center
     ) {
-        Text("Tela de Perfil", color = AppColors.accent, style = TextStyle(fontSize = MaterialTheme.typography.titleLarge.fontSize))
+        Text("Tela de Perfil", color = accentColor, style = TextStyle(fontSize = MaterialTheme.typography.titleLarge.fontSize))
     }
 }
 
