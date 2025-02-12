@@ -159,13 +159,44 @@ fun TelaInicio(primaryColor: Color, accentColor: Color, textColor: Color) {
 
 @Composable
 fun TelaPerfil(primaryColor: Color, accentColor: Color, textColor: Color) {
-    Box(
+    Column(
         modifier = Modifier
             .fillMaxSize()
-            .background(primaryColor),
-        contentAlignment = Alignment.Center
+            .background(primaryColor)
+            .padding(16.dp),
+        horizontalAlignment = Alignment.CenterHorizontally
     ) {
-        Text("Tela de Perfil", color = accentColor, style = TextStyle(fontSize = MaterialTheme.typography.titleLarge.fontSize))
+        Icon(
+            imageVector = Icons.Filled.AccountCircle,
+            contentDescription = "Perfil",
+            modifier = Modifier.size(120.dp),
+            tint = accentColor
+        )
+        Spacer(modifier = Modifier.height(16.dp))
+        Text(
+            text = "Nome do Usuário",
+            color = textColor,
+            style = MaterialTheme.typography.headlineSmall
+        )
+        Text(
+            text = "user@domain.com",
+            color = textColor.copy(alpha = 0.7f),
+            style = MaterialTheme.typography.bodyMedium
+        )
+        Spacer(modifier = Modifier.height(24.dp))
+        Button(
+            onClick = { /* Ação de editar perfil */ },
+            colors = ButtonDefaults.buttonColors(containerColor = accentColor)
+        ) {
+            Text("Editar Perfil", color = Color.White)
+        }
+        Spacer(modifier = Modifier.height(16.dp))
+        Button(
+            onClick = { /* Ação de logout */ },
+            colors = ButtonDefaults.buttonColors(containerColor = Color.Red)
+        ) {
+            Text("Sair", color = Color.White)
+        }
     }
 }
 
