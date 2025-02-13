@@ -18,6 +18,7 @@ import androidx.navigation.NavController
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.FirebaseDatabase
 import androidx.compose.ui.platform.LocalContext
+import com.google.firebase.firestore.FirebaseFirestore
 
 @Composable
 fun TelaRegistroDoutor(navController: NavController) {
@@ -211,33 +212,42 @@ fun TelaRegistroDoutorScreen(navController: NavController) {
     }
 }
 
-fun registrarDoutor(nome: String, apelido: String, idade: String, regiao: String, especialidade: String, email: String, senha: String, context: android.content.Context, navController: NavController) {
-    // Firebase Authentication
+fun registrarDoutor(
+    nome: String, apelido: String, idade: String, regiao: String,
+    especialidade: String, email: String, senha: String,
+    context: android.content.Context, navController: NavController
+) {
     val auth = FirebaseAuth.getInstance()
-    val database = FirebaseDatabase.getInstance().reference
+    val db = FirebaseFirestore.getInstance()
 
     auth.createUserWithEmailAndPassword(email, senha).addOnCompleteListener { task ->
         if (task.isSuccessful) {
-            // Criação do usuário bem-sucedida, agora vamos salvar os dados do doutor no Firebase Database
             val userId = auth.currentUser?.uid
-            val doutor = Doutor(nome, apelido, idade, regiao, especialidade, email)
+            val doutor = hashMapOf(
+                "nome" to nome,
+                "apelido" to apelido,
+                "idade" to idade,
+                "regiao" to regiao,
+                "especialidade" to especialidade,
+                "email" to email
+            )
 
             if (userId != null) {
-                database.child("doutores").child(userId).setValue(doutor).addOnCompleteListener { dbTask ->
-                    if (dbTask.isSuccessful) {
+                db.collection("doutores").document(userId).set(doutor)
+                    .addOnSuccessListener {
                         Toast.makeText(context, "Doutor registrado com sucesso!", Toast.LENGTH_SHORT).show()
-                        // Navega para a tela de Login após o registro bem-sucedido
-                        navController.navigate("Login")
-                    } else {
-                        Toast.makeText(context, "Erro ao registrar doutor no banco de dados!", Toast.LENGTH_SHORT).show()
+                        navController.navigate("login") // Redireciona para a tela de login
                     }
-                }
+                    .addOnFailureListener { e ->
+                        Toast.makeText(context, "Erro ao salvar dados: ${e.message}", Toast.LENGTH_SHORT).show()
+                    }
             }
         } else {
-            Toast.makeText(context, "Erro ao criar usuário: ${task.exception?.message}", Toast.LENGTH_SHORT).show()
+            Toast.makeText(context, "Erro ao registrar: ${task.exception?.message}", Toast.LENGTH_SHORT).show()
         }
     }
 }
+
 
 data class Doutor(
     val nome: String,

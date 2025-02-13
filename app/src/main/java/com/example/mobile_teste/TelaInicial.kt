@@ -170,16 +170,32 @@ fun TelaPerfil(primaryColor: Color, accentColor: Color, textColor: Color) {
 
     LaunchedEffect(userId) {
         userId?.let {
-            db.collection("pacientes").document(it)
-                .get()
-                .addOnSuccessListener { document ->
+            val pacientesRef = db.collection("pacientes").document(it)
+            val doutoresRef = db.collection("doutores").document(it)
+
+            pacientesRef.get().addOnSuccessListener { document ->
+                if (document.exists()) {
                     userName = document.getString("nome") ?: "Nome não encontrado"
                     userEmail = document.getString("email") ?: "Email não encontrado"
+                } else {
+                    // Se não for paciente, tenta buscar como doutor
+                    doutoresRef.get().addOnSuccessListener { doc ->
+                        if (doc.exists()) {
+                            userName = doc.getString("nome") ?: "Nome não encontrado"
+                            userEmail = doc.getString("email") ?: "Email não encontrado"
+                        } else {
+                            userName = "Usuário não encontrado"
+                            userEmail = "---"
+                        }
+                    }.addOnFailureListener {
+                        userName = "Erro ao carregar"
+                        userEmail = "Erro ao carregar"
+                    }
                 }
-                .addOnFailureListener {
-                    userName = "Erro ao carregar"
-                    userEmail = "Erro ao carregar"
-                }
+            }.addOnFailureListener {
+                userName = "Erro ao carregar"
+                userEmail = "Erro ao carregar"
+            }
         } ?: run {
             userName = "Usuário não logado"
             userEmail = "---"
