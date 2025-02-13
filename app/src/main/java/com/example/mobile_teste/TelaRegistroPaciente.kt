@@ -1,5 +1,3 @@
-package com.example.mobile_teste
-
 import android.util.Log
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
@@ -20,7 +18,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import com.google.firebase.auth.FirebaseAuth
-import com.google.firebase.database.FirebaseDatabase
+import com.google.firebase.firestore.FirebaseFirestore
 import androidx.compose.ui.Modifier
 
 @Composable
@@ -35,8 +33,7 @@ fun TelaRegistroPaciente(navController: NavController) {
     var errorMessage by remember { mutableStateOf("") }
 
     val auth = FirebaseAuth.getInstance()
-    val database = FirebaseDatabase.getInstance()
-    val databaseRef = database.getReference("pacientes")
+    val firestore = FirebaseFirestore.getInstance()
 
     fun isValidEmail(email: String): Boolean {
         val emailPattern = android.util.Patterns.EMAIL_ADDRESS
@@ -58,16 +55,20 @@ fun TelaRegistroPaciente(navController: NavController) {
         auth.createUserWithEmailAndPassword(email.text, senha.text)
             .addOnCompleteListener { task ->
                 if (task.isSuccessful) {
-                    // Salvar os dados do paciente no Firebase Database
-                    val patientId = databaseRef.push().key ?: return@addOnCompleteListener
-                    val patient = mapOf(
+                    val userId = auth.currentUser?.uid ?: return@addOnCompleteListener
+
+                    // Criar um mapa com os dados do paciente
+                    val patient = hashMapOf(
                         "nome" to nome.text,
                         "apelido" to apelido.text,
                         "idade" to idade.text,
                         "regiao" to regiao.text,
                         "email" to email.text
                     )
-                    databaseRef.child(patientId).setValue(patient)
+
+                    // Salvar os dados no Firestore na coleção "pacientes"
+                    firestore.collection("pacientes").document(userId)
+                        .set(patient)
                         .addOnSuccessListener {
                             Log.d("Firebase", "Dados salvos com sucesso!")
                             navController.navigate("login") // Redirecionar para a tela de login

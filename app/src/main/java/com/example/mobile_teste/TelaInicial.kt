@@ -16,6 +16,8 @@ import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.LayoutDirection
+import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.firestore.FirebaseFirestore
 
 object AppColors {
     val darkBackground = Color(0xFF000000)
@@ -159,6 +161,31 @@ fun TelaInicio(primaryColor: Color, accentColor: Color, textColor: Color) {
 
 @Composable
 fun TelaPerfil(primaryColor: Color, accentColor: Color, textColor: Color) {
+    val auth = FirebaseAuth.getInstance()
+    val db = FirebaseFirestore.getInstance()
+
+    var userName by remember { mutableStateOf("Carregando...") }
+    var userEmail by remember { mutableStateOf("Carregando...") }
+    val userId = auth.currentUser?.uid
+
+    LaunchedEffect(userId) {
+        userId?.let {
+            db.collection("pacientes").document(it)
+                .get()
+                .addOnSuccessListener { document ->
+                    userName = document.getString("nome") ?: "Nome não encontrado"
+                    userEmail = document.getString("email") ?: "Email não encontrado"
+                }
+                .addOnFailureListener {
+                    userName = "Erro ao carregar"
+                    userEmail = "Erro ao carregar"
+                }
+        } ?: run {
+            userName = "Usuário não logado"
+            userEmail = "---"
+        }
+    }
+
     Column(
         modifier = Modifier
             .fillMaxSize()
@@ -173,35 +200,15 @@ fun TelaPerfil(primaryColor: Color, accentColor: Color, textColor: Color) {
             tint = accentColor
         )
         Spacer(modifier = Modifier.height(16.dp))
-        Text(
-            text = "Nome do Usuário",
-            color = textColor,
-            style = MaterialTheme.typography.headlineSmall
-        )
-        Text(
-            text = "user@domain.com",
-            color = textColor.copy(alpha = 0.7f),
-            style = MaterialTheme.typography.bodyMedium
-        )
+        Text(text = userName, color = textColor, style = MaterialTheme.typography.headlineSmall)
+        Text(text = userEmail, color = textColor.copy(alpha = 0.7f), style = MaterialTheme.typography.bodyMedium)
         Spacer(modifier = Modifier.height(24.dp))
-        Button(
-            onClick = { /* Ação de editar perfil */ },
-            colors = ButtonDefaults.buttonColors(containerColor = accentColor)
-        ) {
+        Button(onClick = { /* Ação de editar perfil */ }, colors = ButtonDefaults.buttonColors(containerColor = accentColor)) {
             Text("Editar Perfil", color = Color.White)
         }
         Spacer(modifier = Modifier.height(16.dp))
-        Button(
-            onClick = { /* Ação de logout */ },
-            colors = ButtonDefaults.buttonColors(containerColor = Color.Red)
-        ) {
+        Button(onClick = { auth.signOut() }, colors = ButtonDefaults.buttonColors(containerColor = Color.Red)) {
             Text("Sair", color = Color.White)
         }
     }
-}
-
-@Preview
-@Composable
-fun PreviewTelaInicial() {
-    TelaInicial(userEmail = "user@domain.com", userName = "John Doe")
 }

@@ -2,6 +2,7 @@ package com.example.mobile_teste
 
 import LoginScreen
 import TelaInicial
+import TelaRegistroPaciente
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent

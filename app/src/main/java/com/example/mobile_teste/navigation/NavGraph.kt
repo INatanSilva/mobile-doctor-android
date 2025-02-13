@@ -2,6 +2,7 @@ package com.example.mobile_teste.navigation
 
 import LoginScreen
 import TelaInicial
+import TelaRegistroPaciente
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.saveable.rememberSaveable
@@ -10,7 +11,6 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import com.example.mobile_teste.TelaEscolhaPacienteOuDoutor
 import com.example.mobile_teste.TelaRegistroDoutor
-import com.example.mobile_teste.TelaRegistroPaciente
 
 @Composable
 fun AppNavigation(navController: NavHostController) {
