@@ -14,6 +14,7 @@ import androidx.compose.ui.Modifier
 import androidx.navigation.compose.*
 import com.example.mobile_teste.ui.theme.MobiletesteTheme
 import kotlinx.coroutines.delay
+import com.google.firebase.auth.FirebaseAuth
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -26,26 +27,33 @@ class MainActivity : ComponentActivity() {
 
                 // Estado para controlar o carregamento
                 var isLoading by remember { mutableStateOf(true) }
+                var startDestination by remember { mutableStateOf("login") }  // Tela inicial
 
-                // Estados para o email e nome do usuário
-                var userEmail by remember { mutableStateOf("") }
-                var userName by remember { mutableStateOf("") }
-
-                // Simula um carregamento de 3 segundos
+                // Verificando o login do usuário
                 LaunchedEffect(Unit) {
+                    // Simula um carregamento de 3 segundos
                     delay(3000)  // Simula o delay de carregamento
-                    isLoading = false
+
+                    // Verifica se o usuário está logado
+                    val auth = FirebaseAuth.getInstance()
+                    val currentUser = auth.currentUser
+                    startDestination = if (currentUser != null) {
+                        "telaInicial"  // Se estiver logado, redireciona para a tela inicial
+                    } else {
+                        "login"  // Caso contrário, para a tela de login
+                    }
+
+                    isLoading = false  // Carregamento concluído
                 }
 
                 // Exibir ícone de carregamento ou conteúdo baseado no estado
                 if (isLoading) {
-                    // Tela de carregamento
                     LoadingScreen()
                 } else {
                     // Tela de navegação normal após o carregamento
                     NavHost(
                         navController = navController,
-                        startDestination = "login"
+                        startDestination = startDestination
                     ) {
                         // Tela de escolha de Paciente ou Doutor
                         composable("telaEscolhaPacienteOuDoutor") {
@@ -57,8 +65,6 @@ class MainActivity : ComponentActivity() {
                             LoginScreen(
                                 navController,
                                 onLogin = { name, email ->
-                                    userName = name
-                                    userEmail = email as String
                                     navController.navigate("telaInicial") {
                                         // Passa o email para a tela inicial
                                         launchSingleTop = true
@@ -72,13 +78,10 @@ class MainActivity : ComponentActivity() {
                             TelaRegistroPaciente(navController = navController)
                         }
 
-                        // Tela de registro do doutor
-                        composable("telaRegistroDoutor") {
-                            TelaRegistroDoutor(navController = navController)
-                        }
-
                         // Tela inicial
                         composable("telaInicial") {
+                            val userEmail = ""
+                            val userName = ""
                             TelaInicial(
                                 userEmail = userEmail,
                                 userName = userName
