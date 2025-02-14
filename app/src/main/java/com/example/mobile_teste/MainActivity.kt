@@ -78,6 +78,11 @@ class MainActivity : ComponentActivity() {
                             TelaRegistroPaciente(navController = navController)
                         }
 
+                        // Tela de registro do doutor
+                        composable("telaRegistroDoutor") {
+                            TelaRegistroDoutor(navController)
+                        }
+
                         // Tela inicial
                         composable("telaInicial") {
                             val userEmail = ""
