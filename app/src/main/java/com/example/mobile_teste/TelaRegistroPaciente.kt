@@ -20,7 +20,10 @@ import androidx.navigation.NavController
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.shadow
+import com.example.mobile_teste.ui.theme.AppColors
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun TelaRegistroPaciente(navController: NavController) {
     var nome by remember { mutableStateOf(TextFieldValue("")) }
@@ -87,79 +90,121 @@ fun TelaRegistroPaciente(navController: NavController) {
     Box(
         modifier = Modifier
             .fillMaxSize()
-            .background(Color(0xFFFFFEC)),
+            .background(AppColors.lightBackground), // Fundo branco
         contentAlignment = Alignment.Center
     ) {
         Column(
             modifier = Modifier
                 .fillMaxWidth(0.9f)
-                .border(2.dp, Color(0xFFB8D8B7), RoundedCornerShape(16.dp))
-                .padding(16.dp)
-                .background(Color(0xFFFFFFFF)),
+                .shadow(elevation = 10.dp, shape = RoundedCornerShape(16.dp)) // Sombra para profundidade
+                .background(AppColors.darkWhite, shape = RoundedCornerShape(16.dp)) // Fundo branco mais forte
+                .padding(16.dp),
             verticalArrangement = Arrangement.spacedBy(16.dp),
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
             Text(
                 text = "Registro de Paciente",
-                color = Color(0xFF3D7B31),
+                color = AppColors.darkBackground, // Texto preto
                 fontSize = 24.sp
             )
 
             OutlinedTextField(
                 value = nome,
                 onValueChange = { nome = it },
-                label = { Text("Nome", color = Color(0xFF3D7B31)) },
-                modifier = Modifier.fillMaxWidth()
+                label = { Text("Nome", color = AppColors.darkBackground) }, // Texto preto
+                modifier = Modifier.fillMaxWidth(),
+                colors = TextFieldDefaults.outlinedTextFieldColors(
+                    focusedBorderColor = AppColors.darkAccent, // Borda azul quando focada
+                    unfocusedBorderColor = AppColors.darkBackground, // Borda preta quando não focada
+                    cursorColor = AppColors.darkAccent, // Cursor azul
+                    focusedLabelColor = AppColors.darkAccent, // Label azul quando focada
+                    unfocusedLabelColor = AppColors.darkBackground // Label preta quando não focada
+                )
             )
 
             OutlinedTextField(
                 value = apelido,
                 onValueChange = { apelido = it },
-                label = { Text("Apelido", color = Color(0xFF3D7B31)) },
-                modifier = Modifier.fillMaxWidth()
+                label = { Text("Apelido", color = AppColors.darkBackground) }, // Texto preto
+                modifier = Modifier.fillMaxWidth(),
+                colors = TextFieldDefaults.outlinedTextFieldColors(
+                    focusedBorderColor = AppColors.darkAccent,
+                    unfocusedBorderColor = AppColors.darkBackground,
+                    cursorColor = AppColors.darkAccent,
+                    focusedLabelColor = AppColors.darkAccent,
+                    unfocusedLabelColor = AppColors.darkBackground
+                )
             )
 
             OutlinedTextField(
                 value = idade,
                 onValueChange = { idade = it },
-                label = { Text("Idade", color = Color(0xFF3D7B31)) },
-                modifier = Modifier.fillMaxWidth()
+                label = { Text("Idade", color = AppColors.darkBackground) }, // Texto preto
+                modifier = Modifier.fillMaxWidth(),
+                colors = TextFieldDefaults.outlinedTextFieldColors(
+                    focusedBorderColor = AppColors.darkAccent,
+                    unfocusedBorderColor = AppColors.darkBackground,
+                    cursorColor = AppColors.darkAccent,
+                    focusedLabelColor = AppColors.darkAccent,
+                    unfocusedLabelColor = AppColors.darkBackground
+                )
             )
 
             OutlinedTextField(
                 value = regiao,
                 onValueChange = { regiao = it },
-                label = { Text("Região", color = Color(0xFF3D7B31)) },
-                modifier = Modifier.fillMaxWidth()
+                label = { Text("Região", color = AppColors.darkBackground) }, // Texto preto
+                modifier = Modifier.fillMaxWidth(),
+                colors = TextFieldDefaults.outlinedTextFieldColors(
+                    focusedBorderColor = AppColors.darkAccent,
+                    unfocusedBorderColor = AppColors.darkBackground,
+                    cursorColor = AppColors.darkAccent,
+                    focusedLabelColor = AppColors.darkAccent,
+                    unfocusedLabelColor = AppColors.darkBackground
+                )
             )
 
             OutlinedTextField(
                 value = email,
                 onValueChange = { email = it },
-                label = { Text("Email", color = Color(0xFF3D7B31)) },
-                modifier = Modifier.fillMaxWidth()
+                label = { Text("Email", color = AppColors.darkBackground) }, // Texto preto
+                modifier = Modifier.fillMaxWidth(),
+                colors = TextFieldDefaults.outlinedTextFieldColors(
+                    focusedBorderColor = AppColors.darkAccent,
+                    unfocusedBorderColor = AppColors.darkBackground,
+                    cursorColor = AppColors.darkAccent,
+                    focusedLabelColor = AppColors.darkAccent,
+                    unfocusedLabelColor = AppColors.darkBackground
+                )
             )
 
             OutlinedTextField(
                 value = senha,
                 onValueChange = { senha = it },
-                label = { Text("Senha", color = Color(0xFF3D7B31)) },
+                label = { Text("Senha", color = AppColors.darkBackground) }, // Texto preto
                 visualTransformation = if (senhaVisivel) VisualTransformation.None else PasswordVisualTransformation(),
                 trailingIcon = {
                     Icon(
                         imageVector = if (senhaVisivel) Icons.Filled.Visibility else Icons.Filled.VisibilityOff,
                         contentDescription = if (senhaVisivel) "Ocultar senha" else "Exibir senha",
                         modifier = Modifier.clickable { senhaVisivel = !senhaVisivel },
-                        tint = Color(0xFF3D7B31)
+                        tint = AppColors.darkBackground // Ícone preto
                     )
                 },
-                modifier = Modifier.fillMaxWidth()
+                modifier = Modifier.fillMaxWidth(),
+                colors = TextFieldDefaults.outlinedTextFieldColors(
+                    focusedBorderColor = AppColors.darkAccent,
+                    unfocusedBorderColor = AppColors.darkBackground,
+                    cursorColor = AppColors.darkAccent,
+                    focusedLabelColor = AppColors.darkAccent,
+                    unfocusedLabelColor = AppColors.darkBackground
+                )
             )
 
             if (errorMessage.isNotEmpty()) {
                 Text(
                     text = errorMessage,
-                    color = Color.Red,
+                    color = Color.Red, // Mensagem de erro em vermelho
                     fontSize = 14.sp
                 )
             }
@@ -172,8 +217,8 @@ fun TelaRegistroPaciente(navController: NavController) {
                     .fillMaxWidth()
                     .height(50.dp),
                 colors = ButtonDefaults.buttonColors(
-                    containerColor = Color(0xFF9EBD8E),
-                    contentColor = Color.White
+                    containerColor = AppColors.darkBackground, // Botão preto
+                    contentColor = AppColors.lightPrimary // Texto branco
                 ),
                 shape = RoundedCornerShape(16.dp)
             ) {

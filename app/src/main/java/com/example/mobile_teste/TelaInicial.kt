@@ -16,20 +16,9 @@ import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.LayoutDirection
+import com.example.mobile_teste.ui.theme.AppColors
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
-
-object AppColors {
-    val darkBackground = Color(0xFF000000)
-    val darkPrimary = Color(0xFF1E1E1E)
-    val darkAccent = Color(0xFF2196F3)
-    val darkWhite = Color(0xFFFFFFFF)
-
-    val lightBackground = Color(0xFFFFFFFF)
-    val lightPrimary = Color(0xFFEEEEEE)
-    val lightAccent = Color(0xFF1976D2)
-    val lightBlack = Color(0xFF000000)
-}
 
 data class BottomNavItem(
     val route: String,
