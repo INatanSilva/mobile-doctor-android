@@ -61,9 +61,17 @@ fun TelaInicial(
     Scaffold(
         topBar = {
             TopAppBar(
-                title = { Text("PsyConnect", color = textColor) },
+                title = { 
+                    Column {
+                        Text(
+                            "PsyConnect", 
+                            color = textColor,
+                            style = MaterialTheme.typography.titleLarge
+                        )
+                    }
+                },
                 colors = TopAppBarDefaults.topAppBarColors(
-                    containerColor = primaryColor
+                    containerColor = if (isDarkMode) Color(0xFF2C2C2C) else Color.White.copy(alpha = 0.9f)
                 ),
                 actions = {
                     IconButton(onClick = { isDarkMode = !isDarkMode }) {
@@ -120,7 +128,7 @@ fun TelaInicial(
                 )
         ) {
             when (selectedTab) {
-                0 -> TelaConsultas(primaryColor, accentColor, textColor)
+                0 -> TelaConsultas(primaryColor, accentColor, textColor, isDarkMode)
                 1 -> TelaInicio(primaryColor, accentColor, textColor)
                 2 -> TelaPerfil(primaryColor, accentColor, textColor)
             }
@@ -129,14 +137,131 @@ fun TelaInicial(
 }
 
 @Composable
-fun TelaConsultas(primaryColor: Color, accentColor: Color, textColor: Color) {
-    Box(
+fun TelaConsultas(primaryColor: Color, accentColor: Color, textColor: Color, isDarkMode: Boolean) {
+    val cardBackgroundColor = if (isDarkMode) Color(0xFF2C2C2C) else Color(0xFFF5F5F5)
+
+    Column(
         modifier = Modifier
             .fillMaxSize()
-            .background(primaryColor),
-        contentAlignment = Alignment.Center
+            .background(primaryColor)
+            .padding(16.dp)
     ) {
-        Text("Tela de Consultas", color = accentColor, style = TextStyle(fontSize = MaterialTheme.typography.titleLarge.fontSize))
+        Text(
+            "Seus Canais",
+            color = textColor,
+            style = MaterialTheme.typography.headlineMedium,
+            modifier = Modifier.padding(bottom = 16.dp)
+        )
+
+        // Grid de canais
+        Column(
+            modifier = Modifier.fillMaxWidth(),
+            verticalArrangement = Arrangement.spacedBy(16.dp)
+        ) {
+            // Primeira linha com Suporte e Comunidade
+            Row(
+                modifier = Modifier.fillMaxWidth(),
+                horizontalArrangement = Arrangement.spacedBy(16.dp)
+            ) {
+                // Suporte
+                Card(
+                    modifier = Modifier.weight(1f),
+                    colors = CardDefaults.cardColors(containerColor = cardBackgroundColor)
+                ) {
+                    Column(
+                        modifier = Modifier.padding(16.dp)
+                    ) {
+                        Text(
+                            "Suporte",
+                            color = Color(0xFF2196F3),
+                            style = MaterialTheme.typography.titleLarge
+                        )
+                        Text(
+                            "5 mensagens novas",
+                            color = textColor.copy(alpha = 0.7f),
+                            style = MaterialTheme.typography.bodyMedium,
+                            modifier = Modifier.padding(vertical = 8.dp)
+                        )
+                        Button(
+                            onClick = { },
+                            colors = ButtonDefaults.buttonColors(containerColor = Color(0xFF2196F3)),
+                            modifier = Modifier.align(Alignment.Start)
+                        ) {
+                            Text("Acessar")
+                        }
+                    }
+                }
+
+                // Comunidade
+                Card(
+                    modifier = Modifier.weight(1f),
+                    colors = CardDefaults.cardColors(containerColor = cardBackgroundColor)
+                ) {
+                    Column(
+                        modifier = Modifier.padding(16.dp)
+                    ) {
+                        Text(
+                            "Comunidade",
+                            color = Color(0xFF4CAF50),
+                            style = MaterialTheme.typography.titleLarge
+                        )
+                        Text(
+                            "2 mensagens novas",
+                            color = textColor.copy(alpha = 0.7f),
+                            style = MaterialTheme.typography.bodyMedium,
+                            modifier = Modifier.padding(vertical = 8.dp)
+                        )
+                        Button(
+                            onClick = { },
+                            colors = ButtonDefaults.buttonColors(containerColor = Color(0xFF4CAF50)),
+                            modifier = Modifier.align(Alignment.Start)
+                        ) {
+                            Text("Acessar")
+                        }
+                    }
+                }
+            }
+
+            // Segunda linha com Meu Psicólogo
+            Card(
+                modifier = Modifier.fillMaxWidth(),
+                colors = CardDefaults.cardColors(containerColor = cardBackgroundColor)
+            ) {
+                Column(
+                    modifier = Modifier.padding(16.dp)
+                ) {
+                    Text(
+                        "Meu Psicólogo",
+                        color = Color(0xFFFFA000),
+                        style = MaterialTheme.typography.titleLarge
+                    )
+                    Text(
+                        "Próxima sessão: hoje",
+                        color = textColor.copy(alpha = 0.7f),
+                        style = MaterialTheme.typography.bodyMedium,
+                        modifier = Modifier.padding(vertical = 8.dp)
+                    )
+                    Button(
+                        onClick = { },
+                        colors = ButtonDefaults.buttonColors(containerColor = Color(0xFFFFA000)),
+                        modifier = Modifier.align(Alignment.Start)
+                    ) {
+                        Text("Acessar")
+                    }
+                }
+            }
+        }
+
+        // Botão Ver Todos os Canais
+        Button(
+            onClick = { },
+            colors = ButtonDefaults.buttonColors(containerColor = Color(0xFF2196F3)),
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(top = 16.dp)
+        ) {
+            Text("Ver Todos os Canais")
+        }
     }
 }
 
