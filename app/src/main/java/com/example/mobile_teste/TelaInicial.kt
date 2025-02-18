@@ -129,7 +129,7 @@ fun TelaInicial(
         ) {
             when (selectedTab) {
                 0 -> TelaConsultas(primaryColor, accentColor, textColor, isDarkMode)
-                1 -> TelaInicio(primaryColor, accentColor, textColor)
+                1 -> TelaInicio(primaryColor, accentColor, textColor, userName)
                 2 -> TelaPerfil(primaryColor, accentColor, textColor)
             }
         }
@@ -271,16 +271,39 @@ fun TelaConsultas(primaryColor: Color, accentColor: Color, textColor: Color, isD
 }
 
 @Composable
-fun TelaInicio(primaryColor: Color, accentColor: Color, textColor: Color) {
+fun TelaInicio(primaryColor: Color, accentColor: Color, textColor: Color, userName: String) {
+    val auth = FirebaseAuth.getInstance()
+    val db = FirebaseFirestore.getInstance()
+    var nomeUsuario by remember { mutableStateOf("") }
+    val userId = auth.currentUser?.uid
+
+    LaunchedEffect(userId) {
+        userId?.let {
+            val pacientesRef = db.collection("pacientes").document(it)
+            val doutoresRef = db.collection("doutores").document(it)
+
+            pacientesRef.get().addOnSuccessListener { document ->
+                if (document.exists()) {
+                    nomeUsuario = document.getString("nome") ?: "Visitante"
+                } else {
+                    doutoresRef.get().addOnSuccessListener { doc ->
+                        if (doc.exists()) {
+                            nomeUsuario = doc.getString("nome") ?: "Visitante"
+                        }
+                    }
+                }
+            }
+        }
+    }
+
     Column(
         modifier = Modifier
             .fillMaxSize()
             .background(primaryColor)
             .padding(16.dp)
     ) {
-        // Cabeçalho
         Text(
-            "Olá, Marina",
+            "Olá, ${nomeUsuario.ifEmpty { "Visitante" }}",
             color = textColor,
             style = MaterialTheme.typography.headlineMedium
         )
