@@ -19,6 +19,10 @@ import androidx.compose.ui.unit.LayoutDirection
 import com.example.mobile_teste.ui.theme.AppColors
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
+import androidx.compose.foundation.lazy.rememberLazyListState
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.horizontalScroll
+import androidx.compose.material.icons.filled.Star
 
 data class BottomNavItem(
     val route: String,
@@ -138,13 +142,196 @@ fun TelaConsultas(primaryColor: Color, accentColor: Color, textColor: Color) {
 
 @Composable
 fun TelaInicio(primaryColor: Color, accentColor: Color, textColor: Color) {
-    Box(
+    Column(
         modifier = Modifier
             .fillMaxSize()
-            .background(primaryColor),
-        contentAlignment = Alignment.Center
+            .background(primaryColor)
+            .padding(16.dp)
     ) {
-        Text("Tela Inicial", color = accentColor, style = TextStyle(fontSize = MaterialTheme.typography.titleLarge.fontSize))
+        // Cabeçalho
+        Text(
+            "Olá, Marina",
+            color = textColor,
+            style = MaterialTheme.typography.headlineMedium
+        )
+        Text(
+            "Encontre seu terapeuta",
+            color = textColor,
+            style = MaterialTheme.typography.headlineLarge,
+            modifier = Modifier.padding(top = 8.dp)
+        )
+
+        // Barra de pesquisa
+        OutlinedTextField(
+            value = "",
+            onValueChange = { },
+            placeholder = { Text("Buscar por especialidade, nome...", color = textColor.copy(alpha = 0.6f)) },
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(vertical = 16.dp),
+            colors = OutlinedTextFieldDefaults.colors(
+                unfocusedBorderColor = textColor.copy(alpha = 0.3f),
+                focusedBorderColor = accentColor
+            )
+        )
+
+        // Tags de categorias
+        Row(
+            modifier = Modifier
+                .horizontalScroll(rememberScrollState())
+                .padding(vertical = 8.dp)
+        ) {
+            listOf("Depressão", "Ansiedade", "Estresse", "Mais...").forEach { categoria ->
+                Surface(
+                    onClick = { },
+                    color = accentColor.copy(alpha = 0.1f),
+                    modifier = Modifier.padding(end = 8.dp),
+                    shape = MaterialTheme.shapes.medium
+                ) {
+                    Text(
+                        text = categoria,
+                        color = accentColor,
+                        modifier = Modifier.padding(horizontal = 12.dp, vertical = 8.dp)
+                    )
+                }
+            }
+        }
+
+        // Seção Recomendados
+        Text(
+            "Recomendados para você",
+            color = textColor,
+            style = MaterialTheme.typography.titleLarge,
+            modifier = Modifier.padding(vertical = 16.dp)
+        )
+
+        // Cards dos terapeutas
+        Row(
+            modifier = Modifier
+                .horizontalScroll(rememberScrollState())
+        ) {
+            TerapeutaCard(
+                iniciais = "DR",
+                nome = "Dra. Regina Silva",
+                especialidade = "Psicóloga • TCC",
+                avaliacao = 4.1f,
+                accentColor = accentColor,
+                textColor = textColor
+            )
+            TerapeutaCard(
+                iniciais = "JL",
+                nome = "Dr. João Lima",
+                especialidade = "Psicoterapeuta • Gestalt",
+                avaliacao = 4.9f,
+                accentColor = accentColor,
+                textColor = textColor
+            )
+        }
+
+        // Próxima sessão
+        Text(
+            "Sua próxima sessão",
+            color = textColor,
+            style = MaterialTheme.typography.titleLarge,
+            modifier = Modifier.padding(vertical = 16.dp)
+        )
+
+        Card(
+            modifier = Modifier.fillMaxWidth(),
+            colors = CardDefaults.cardColors(containerColor = primaryColor)
+        ) {
+            Row(
+                modifier = Modifier
+                    .padding(16.dp)
+                    .fillMaxWidth(),
+                verticalAlignment = Alignment.CenterVertically,
+                horizontalArrangement = Arrangement.SpaceBetween
+            ) {
+                Row(verticalAlignment = Alignment.CenterVertically) {
+                    Box(
+                        modifier = Modifier
+                            .size(40.dp)
+                            .background(
+                                color = accentColor.copy(alpha = 0.2f),
+                                shape = MaterialTheme.shapes.medium
+                            ),
+                        contentAlignment = Alignment.Center
+                    ) {
+                        Text("RS", color = textColor)
+                    }
+                    Spacer(modifier = Modifier.width(12.dp))
+                    Column {
+                        Text("Dra. Regina Silva", color = textColor)
+                        Text("Hoje • 16:30 - 17:30", color = textColor.copy(alpha = 0.7f))
+                    }
+                }
+                Button(
+                    onClick = { },
+                    colors = ButtonDefaults.buttonColors(containerColor = Color(0xFF4CAF50))
+                ) {
+                    Text("Entrar")
+                }
+            }
+        }
+    }
+}
+
+@Composable
+fun TerapeutaCard(
+    iniciais: String,
+    nome: String,
+    especialidade: String,
+    avaliacao: Float,
+    accentColor: Color,
+    textColor: Color
+) {
+    Card(
+        modifier = Modifier
+            .padding(end = 16.dp)
+            .width(200.dp),
+        colors = CardDefaults.cardColors(containerColor = accentColor.copy(alpha = 0.1f))
+    ) {
+        Column(
+            modifier = Modifier.padding(16.dp),
+            horizontalAlignment = Alignment.CenterHorizontally
+        ) {
+            Box(
+                modifier = Modifier
+                    .size(60.dp)
+                    .background(
+                        color = accentColor.copy(alpha = 0.2f),
+                        shape = MaterialTheme.shapes.medium
+                    ),
+                contentAlignment = Alignment.Center
+            ) {
+                Text(iniciais, color = textColor)
+            }
+            Spacer(modifier = Modifier.height(8.dp))
+            Text(nome, color = textColor, style = MaterialTheme.typography.titleMedium)
+            Text(especialidade, color = textColor.copy(alpha = 0.7f))
+            Row(modifier = Modifier.padding(vertical = 8.dp)) {
+                repeat(5) { index ->
+                    Icon(
+                        imageVector = Icons.Filled.Star,
+                        contentDescription = null,
+                        tint = if (index < avaliacao) Color(0xFFFFC107) else textColor.copy(alpha = 0.3f),
+                        modifier = Modifier.size(16.dp)
+                    )
+                }
+                Text(
+                    " $avaliacao",
+                    color = textColor.copy(alpha = 0.7f),
+                    style = MaterialTheme.typography.bodySmall
+                )
+            }
+            Button(
+                onClick = { },
+                colors = ButtonDefaults.buttonColors(containerColor = accentColor),
+                modifier = Modifier.fillMaxWidth()
+            ) {
+                Text("Agendar")
+            }
+        }
     }
 }
 
