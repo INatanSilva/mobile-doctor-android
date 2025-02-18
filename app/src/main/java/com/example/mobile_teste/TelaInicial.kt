@@ -253,14 +253,19 @@ fun TelaConsultas(primaryColor: Color, accentColor: Color, textColor: Color, isD
         }
 
         // Botão Ver Todos os Canais
-        Button(
-            onClick = { },
-            colors = ButtonDefaults.buttonColors(containerColor = Color(0xFF2196F3)),
+        Box(
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(top = 16.dp)
+                .padding(top = 16.dp),
+            contentAlignment = Alignment.Center
         ) {
-            Text("Ver Todos os Canais")
+            Button(
+                onClick = { },
+                colors = ButtonDefaults.buttonColors(containerColor = Color(0xFF2196F3)),
+                modifier = Modifier.width(200.dp) // Largura fixa de 200.dp
+            ) {
+                Text("Ver Todos os Canais")
+            }
         }
     }
 }
