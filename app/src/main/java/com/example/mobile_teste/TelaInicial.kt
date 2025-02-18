@@ -413,28 +413,54 @@ fun TerapeutaCard(
     Card(
         modifier = Modifier
             .padding(end = 16.dp)
-            .width(200.dp),
+            .width(180.dp),
         colors = CardDefaults.cardColors(containerColor = accentColor.copy(alpha = 0.1f))
     ) {
         Column(
-            modifier = Modifier.padding(16.dp),
-            horizontalAlignment = Alignment.CenterHorizontally
+            modifier = Modifier
+                .padding(16.dp)
+                .height(220.dp),
+            horizontalAlignment = Alignment.CenterHorizontally,
+            verticalArrangement = Arrangement.SpaceBetween
         ) {
             Box(
                 modifier = Modifier
-                    .size(60.dp)
+                    .size(70.dp)
                     .background(
                         color = accentColor.copy(alpha = 0.2f),
                         shape = MaterialTheme.shapes.medium
                     ),
                 contentAlignment = Alignment.Center
             ) {
-                Text(iniciais, color = textColor)
+                Text(
+                    iniciais, 
+                    color = textColor,
+                    style = MaterialTheme.typography.titleLarge
+                )
             }
-            Spacer(modifier = Modifier.height(8.dp))
-            Text(nome, color = textColor, style = MaterialTheme.typography.titleMedium)
-            Text(especialidade, color = textColor.copy(alpha = 0.7f))
-            Row(modifier = Modifier.padding(vertical = 8.dp)) {
+            
+            Column(
+                horizontalAlignment = Alignment.CenterHorizontally,
+                modifier = Modifier.padding(vertical = 8.dp)
+            ) {
+                Text(
+                    nome, 
+                    color = textColor, 
+                    style = MaterialTheme.typography.titleMedium,
+                    maxLines = 1
+                )
+                Text(
+                    especialidade, 
+                    color = textColor.copy(alpha = 0.7f),
+                    style = MaterialTheme.typography.bodyMedium,
+                    maxLines = 1
+                )
+            }
+            
+            Row(
+                modifier = Modifier.padding(vertical = 4.dp),
+                horizontalArrangement = Arrangement.Center
+            ) {
                 repeat(5) { index ->
                     Icon(
                         imageVector = Icons.Filled.Star,
@@ -449,6 +475,7 @@ fun TerapeutaCard(
                     style = MaterialTheme.typography.bodySmall
                 )
             }
+            
             Button(
                 onClick = { },
                 colors = ButtonDefaults.buttonColors(containerColor = accentColor),
